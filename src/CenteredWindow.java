@@ -28,19 +28,32 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        updateSize();
-        updatePosition();
+        updateInternalSize();
+        updateInternalPosition();
         init();
         setVisible(true);
     }
 
     // Size methods
-
-    private void updateSize() {
+    protected void updateInternalSize() {
         setSize(getAbsoluteSize());
     }
 
-    private void updatePosition() {
+    protected void updateSize() {
+        Dimension size = getSize();
+        float sx, sy;
+        if (isSizeRelative) {
+            Dimension screenSize = getToolkit().getScreenSize();
+            sx = size.width / (float)screenSize.width;
+            sy = size.height / (float)screenSize.height;
+        } else {
+            sx = (float)size.width;
+            sy = (float)size.height;
+        }
+        setSize(sx, sy);
+    }
+
+    protected void updateInternalPosition() {
         Dimension screenSize = getToolkit().getScreenSize();
         Dimension size = getAbsoluteSize();
         setLocation((screenSize.width - size.width) / 2, (screenSize.height - size.height) / 2);
@@ -66,7 +79,7 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
 
     public void setSizeX(float x) {
         sizeX = x;
-        updateSize();
+        updateInternalSize();
     }
 
     public float getSizeY() {
@@ -75,12 +88,13 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
 
     public void setSizeY(float y) {
         sizeY = y;
-        updateSize();
+        updateInternalSize();
     }
 
     public void setSize(float x, float y) {
         sizeX = x;
         sizeY = y;
+        updateInternalSize();
     }
 
     public boolean isSizeRelative() {
@@ -89,6 +103,6 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
 
     public void setSizeRelative(boolean value) {
         isSizeRelative = value;
-        updateSize();
+        updateInternalSize();
     }
 }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,7 +38,7 @@ public class MainWindow extends CenteredWindow {
     }
 
     public MainWindow(float sx, float sy) {
-        this(sx ,sy, false);
+        this(sx, sy, false);
     }
 
     public MainWindow() {
@@ -61,28 +62,23 @@ public class MainWindow extends CenteredWindow {
         panel.setBorder(new EmptyBorder(
             marginPaddingY, marginPaddingX,
             marginPaddingY, marginPaddingX));
-        
+
         // Header
         JLabel header = new JLabel("Mōmoku - Blind Test for the Weeb!", SwingConstants.CENTER);
-        header.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(50f));
+        header.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(Font.BOLD, 50f));
         panel.add(header, BorderLayout.NORTH);
-        
+
         // Footer
         JPanel footerPanel = new JPanel();
-        FlowLayout footerLayout = new FlowLayout(FlowLayout.CENTER, 20, 20);
+        FlowLayout footerLayout = new FlowLayout(FlowLayout.CENTER, 20, 10);
         footerPanel.setLayout(footerLayout);
 
         JLabel footerLabel = new JLabel("Who is this?", SwingConstants.CENTER);
-        footerLabel.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(50f));
+        footerLabel.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(30f));
         footerPanel.add(footerLabel);
 
         JButton nextButton = new JButton("Next");
-        nextButton.setPreferredSize(new Dimension(120, 60));
-        nextButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-               nextImage();
-            }          
-         });
+        nextButton.setPreferredSize(new Dimension(120, 50));
 
         footerPanel.add(nextButton);
         panel.add(footerPanel, BorderLayout.SOUTH);
@@ -97,7 +93,7 @@ public class MainWindow extends CenteredWindow {
 
         add(panel);
         pack();
-        
+
         updateSize();
         updateInternalPosition();
         setResizable(false);

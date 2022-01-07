@@ -1,5 +1,4 @@
 import java.awt.Dimension;
-import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
@@ -10,14 +9,10 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
     private float sizeY;
     private boolean isSizeRelative;
 
-    private Toolkit toolkit;
-
     protected CenteredWindow(float sx, float sy, boolean srel) {
         sizeX = sx;
         sizeY = sy;
         isSizeRelative = srel;
-
-        toolkit = getToolkit();
     }
 
     protected CenteredWindow(float sx, float sy) {
@@ -46,7 +41,7 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
     }
 
     private void updatePosition() {
-        Dimension screenSize = toolkit.getScreenSize();
+        Dimension screenSize = getToolkit().getScreenSize();
         Dimension size = getAbsoluteSize();
         setLocation((screenSize.width - size.width) / 2, (screenSize.height - size.height) / 2);
     }
@@ -54,7 +49,7 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
     public Dimension getAbsoluteSize() {
         float sx, sy;
         if (isSizeRelative) {
-            Dimension screenSize = toolkit.getScreenSize();
+            Dimension screenSize = getToolkit().getScreenSize();
             sx = screenSize.width * sizeX;
             sy = screenSize.height * sizeY;
         } else {

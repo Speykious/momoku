@@ -8,6 +8,7 @@ public class Main {
         // Setup modern look and feel
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
+            UIManager.put("defaultFont", GlobalSettings.DEFAULT_FONT);
         } catch (Exception ex) {
             System.err.println("Failed to initialize LaF");
         }

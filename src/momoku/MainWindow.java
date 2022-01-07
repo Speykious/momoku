@@ -30,7 +30,7 @@ public class MainWindow extends CenteredWindow {
     private int imageIndex;
     private ImageCanvas canvas;
     private JTextField guessingTextField;
-    private ActionListener nextImageListener;
+    private ActionListener guessListener;
 
     public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy) {
         super(sx, sy, srel);
@@ -38,12 +38,12 @@ public class MainWindow extends CenteredWindow {
         marginPaddingY = mpy;
         canvas = new ImageCanvas();
         guessingTextField = new JTextField(16);
-        nextImage(false);
+        guess(false);
 
-        nextImageListener = new ActionListener() {
+        guessListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 guessingTextField.setText("");
-                nextImage();
+                guess();
             }
         };
     }
@@ -92,12 +92,12 @@ public class MainWindow extends CenteredWindow {
         footerLabel.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(30f));
         footerPanel.add(footerLabel);
 
-        guessingTextField.addActionListener(nextImageListener);
+        guessingTextField.addActionListener(guessListener);
         footerPanel.add(guessingTextField);
 
         JButton nextButton = new JButton("Next");
         nextButton.setPreferredSize(new Dimension(120, 50));
-        nextButton.addActionListener(nextImageListener);
+        nextButton.addActionListener(guessListener);
 
         footerPanel.add(nextButton);
         panel.add(footerPanel, BorderLayout.SOUTH);
@@ -118,8 +118,8 @@ public class MainWindow extends CenteredWindow {
         setResizable(false);
     }
 
-    public void nextImage() {
-        nextImage(true);
+    public void guess() {
+        guess(true);
     }
 
     private int updateImageIndex() {
@@ -131,7 +131,7 @@ public class MainWindow extends CenteredWindow {
         return imageIndex;
     }
 
-    public void nextImage(boolean repaint) {
+    public void guess(boolean repaint) {
         canvas.setImagePath(GlobalSettings.IMAGE_FILES[updateImageIndex()].getAbsolutePath());
         if (repaint)
             canvas.repaint();

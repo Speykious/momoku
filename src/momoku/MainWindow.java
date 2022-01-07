@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
@@ -28,6 +29,7 @@ public class MainWindow extends CenteredWindow {
     private int marginPaddingY;
     private int imageIndex;
     private ImageCanvas canvas;
+    private JTextField guessingTextField;
     private ActionListener nextImageListener;
 
     public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy) {
@@ -35,10 +37,12 @@ public class MainWindow extends CenteredWindow {
         marginPaddingX = mpx;
         marginPaddingY = mpy;
         canvas = new ImageCanvas();
+        guessingTextField = new JTextField(16);
         nextImage(false);
 
         nextImageListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                guessingTextField.setText("");
                 nextImage();
             }
         };
@@ -87,6 +91,9 @@ public class MainWindow extends CenteredWindow {
         JLabel footerLabel = new JLabel("Who is this?", SwingConstants.CENTER);
         footerLabel.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(30f));
         footerPanel.add(footerLabel);
+
+        guessingTextField.addActionListener(nextImageListener);
+        footerPanel.add(guessingTextField);
 
         JButton nextButton = new JButton("Next");
         nextButton.setPreferredSize(new Dimension(120, 50));

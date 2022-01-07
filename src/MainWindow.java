@@ -2,11 +2,13 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,10 +21,15 @@ import javax.swing.SwingConstants;
 public class MainWindow extends CenteredWindow {
     private int marginPaddingX;
     private int marginPaddingY;
+    private int imageIndex;
+    private ImageCanvas canvas;
 
     public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy) {
         super(sx, sy, srel);
-        setMarginPadding(mpx, mpy);
+        marginPaddingX = mpx;
+        marginPaddingY = mpy;
+        canvas = new ImageCanvas();
+        nextImage(false);
     }
 
     public MainWindow(float sx, float sy, boolean srel) {
@@ -39,9 +46,10 @@ public class MainWindow extends CenteredWindow {
 
     @Override
     public void init() {
-        setTitle("Hello World (Java Swing)");
+        setTitle("Mōmoku");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Main layout
         BorderLayout mainLayout = new BorderLayout();
         mainLayout.setHgap(20);
         mainLayout.setVgap(20);
@@ -54,50 +62,63 @@ public class MainWindow extends CenteredWindow {
             marginPaddingY, marginPaddingX,
             marginPaddingY, marginPaddingX));
         
-        JLabel header = new JLabel("Hello World!", SwingConstants.CENTER);
+        // Header
+        JLabel header = new JLabel("Mōmoku - Blind Test for the Weeb!", SwingConstants.CENTER);
         header.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(50f));
         panel.add(header, BorderLayout.NORTH);
+        
+        // Footer
+        JPanel footerPanel = new JPanel();
+        FlowLayout footerLayout = new FlowLayout(FlowLayout.CENTER, 20, 20);
+        footerPanel.setLayout(footerLayout);
 
-        JLabel footer = new JLabel("Bye World!", SwingConstants.CENTER);
-        footer.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(50f));
-        panel.add(footer, BorderLayout.SOUTH);
+        JLabel footerLabel = new JLabel("Who is this?", SwingConstants.CENTER);
+        footerLabel.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(50f));
+        footerPanel.add(footerLabel);
 
+        JButton nextButton = new JButton("Next");
+        nextButton.setPreferredSize(new Dimension(120, 60));
+        nextButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               nextImage();
+            }          
+         });
 
+        footerPanel.add(nextButton);
+        panel.add(footerPanel, BorderLayout.SOUTH);
+
+        // Canvas
         JPanel canvasPanel = new JPanel();
         canvasPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         canvasPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        // BoxLayout canvasLayout = new BoxLayout(canvasPanel.getcontent, BoxLayout.Y_AXIS);
-        // canvasPanel.setLayout(canvasLayout);
         canvasPanel.setBorder(BorderFactory.createLineBorder(Color.getHSBColor(0f, 0f, .5f), 1));
-        ImageCanvas canvas = new ImageCanvas("some path here");
         canvasPanel.add(canvas);
         panel.add(canvasPanel, BorderLayout.CENTER);
+
         add(panel);
+        pack();
+        
+        updateSize();
+        updateInternalPosition();
+        setResizable(false);
     }
 
-    public int getMarginPaddingX() {
-        return marginPaddingX;
+    public void nextImage() {
+        nextImage(true);
     }
 
-    public void setMarginPaddingX(int x) {
-        marginPaddingX = x;
+    private int updateImageIndex() {
+        int previousIndex;
+        do {
+            previousIndex = imageIndex;
+            imageIndex = Math.abs(GlobalSettings.RANDOM.nextInt()) % GlobalSettings.IMAGE_FILES.length;
+        } while (imageIndex == previousIndex);
+        return imageIndex;
     }
 
-    public int getMarginPaddingY() {
-        return marginPaddingY;
-    }
-
-    public void setMarginPaddingY(int y) {
-        marginPaddingY = y;
-    }
-
-    public void setMarginPadding(int value) {
-        marginPaddingX = value;
-        marginPaddingY = value;
-    }
-
-    public void setMarginPadding(int x, int y) {
-        marginPaddingX = x;
-        marginPaddingY = y;
+    public void nextImage(boolean repaint) {
+        canvas.setImagePath(GlobalSettings.IMAGE_FILES[updateImageIndex()].getAbsolutePath());
+        if (repaint)
+            canvas.repaint();
     }
 }

@@ -24,6 +24,7 @@ public class MainWindow extends CenteredWindow {
     private int marginPaddingY;
     private int imageIndex;
     private ImageCanvas canvas;
+    private ActionListener nextImageListener;
 
     public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy) {
         super(sx, sy, srel);
@@ -31,6 +32,12 @@ public class MainWindow extends CenteredWindow {
         marginPaddingY = mpy;
         canvas = new ImageCanvas();
         nextImage(false);
+
+        nextImageListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                nextImage();
+            }
+        };
     }
 
     public MainWindow(float sx, float sy, boolean srel) {
@@ -79,6 +86,7 @@ public class MainWindow extends CenteredWindow {
 
         JButton nextButton = new JButton("Next");
         nextButton.setPreferredSize(new Dimension(120, 50));
+        nextButton.addActionListener(nextImageListener);
 
         footerPanel.add(nextButton);
         panel.add(footerPanel, BorderLayout.SOUTH);

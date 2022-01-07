@@ -1,3 +1,5 @@
+package momoku;
+
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 

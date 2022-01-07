@@ -1,4 +1,4 @@
-package components;
+package momoku.components;
 
 import java.awt.Dimension;
 

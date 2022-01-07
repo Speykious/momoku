@@ -1,3 +1,5 @@
+package momoku;
+
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.File;

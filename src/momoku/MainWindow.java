@@ -1,5 +1,7 @@
-import components.CenteredWindow;
-import components.ImageCanvas;
+package momoku;
+
+import momoku.components.CenteredWindow;
+import momoku.components.ImageCanvas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

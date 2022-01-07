@@ -24,7 +24,7 @@ public class MainWindow extends CenteredWindow {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JLabel label = new JLabel("Hello World!", SwingConstants.CENTER);
-        label.setFont(GlobalSettings.DEFAULT_FONT);
+        label.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(50f));
         getContentPane().add(label);
     }
 }

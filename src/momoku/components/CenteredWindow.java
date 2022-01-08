@@ -5,24 +5,31 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 
 public abstract class CenteredWindow extends JFrame implements Runnable {
+    private boolean visible;
+
     // Absolute Size coordinate values are between 0 and width/height
     // Relative Size coordinate values are between 0 and 1
     private float sizeX;
     private float sizeY;
     private boolean isSizeRelative;
 
-    protected CenteredWindow(float sx, float sy, boolean srel) {
+    protected CenteredWindow(boolean visible, float sx, float sy, boolean srel) {
+        this.visible = visible;
         sizeX = sx;
         sizeY = sy;
         isSizeRelative = srel;
     }
 
-    protected CenteredWindow(float sx, float sy) {
-        this(sx, sy, false);
+    protected CenteredWindow(boolean visible, float sx, float sy) {
+        this(visible, sx, sy, false);
+    }
+
+    protected CenteredWindow(boolean visible) {
+        this(visible, .8f, .8f, true);
     }
 
     protected CenteredWindow() {
-        this(.8f, .8f, true);
+        this(false);
     }
 
     /** Create and set up the window. */
@@ -30,10 +37,11 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
 
     @Override
     public void run() {
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         updateInternalSize();
         updateInternalPosition();
         init();
-        setVisible(true);
+        setVisible(visible);
     }
 
     // Size methods

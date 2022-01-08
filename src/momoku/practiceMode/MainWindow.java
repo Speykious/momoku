@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TimerTask;
@@ -39,8 +38,8 @@ public class MainWindow extends CenteredWindow {
 
     private PracticeGameState state;
 
-    public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy, PracticeGameState pgs) {
-        super(sx, sy, srel);
+    public MainWindow(boolean visible, float sx, float sy, boolean srel, int mpx, int mpy, PracticeGameState pgs) {
+        super(visible, sx, sy, srel);
         marginPaddingX = mpx;
         marginPaddingY = mpy;
         canvas = new ImageCanvas();
@@ -57,38 +56,38 @@ public class MainWindow extends CenteredWindow {
         state = pgs;
     }
 
-    public MainWindow(float sx, float sy, boolean srel, PracticeGameState pgs) {
-        this(sx, sy, srel, 100, 50, pgs);
+    public MainWindow(boolean visible, float sx, float sy, boolean srel, PracticeGameState pgs) {
+        this(visible, sx, sy, srel, 100, 50, pgs);
     }
 
-    public MainWindow(float sx, float sy, boolean srel) {
-        this(sx, sy, srel, new PracticeGameState());
+    public MainWindow(boolean visible, float sx, float sy, boolean srel) {
+        this(visible, sx, sy, srel, new PracticeGameState());
     }
 
-    public MainWindow(float sx, float sy, PracticeGameState pgs) {
-        this(sx, sy, false, pgs);
+    public MainWindow(boolean visible, float sx, float sy, PracticeGameState pgs) {
+        this(visible, sx, sy, false, pgs);
     }
 
-    public MainWindow(float sx, float sy) {
-        this(sx, sy, false);
+    public MainWindow(boolean visible, float sx, float sy) {
+        this(visible, sx, sy, false);
     }
 
-    public MainWindow(PracticeGameState pgs) {
-        this(.8f, .8f, true, pgs);
+    public MainWindow(boolean visible, PracticeGameState pgs) {
+        this(visible, .8f, .8f, true, pgs);
+    }
+
+    public MainWindow(boolean visible) {
+        this(visible, new PracticeGameState());
     }
 
     public MainWindow() {
-        this(new PracticeGameState());
+        this(false);
     }
 
     @Override
     public void init() {
         setTitle("Mōmoku");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Fonts
-        Font headerFont = GlobalSettings.DEFAULT_FONT.deriveFont(Font.BOLD, 50f);
-        Font footerFont = GlobalSettings.DEFAULT_FONT.deriveFont(30f);
 
         // Main layout
         BorderLayout mainLayout = new BorderLayout();
@@ -105,7 +104,7 @@ public class MainWindow extends CenteredWindow {
 
         // Header
         JLabel header = new JLabel("Practice Mode", SwingConstants.CENTER);
-        header.setFont(headerFont);
+        header.setFont(GlobalSettings.HEADER_FONT);
         panel.add(header, BorderLayout.NORTH);
 
         // Footer
@@ -114,7 +113,7 @@ public class MainWindow extends CenteredWindow {
         footerPanel.setLayout(footerLayout);
 
         JLabel footerLabel = new JLabel("Who is this?", SwingConstants.CENTER);
-        footerLabel.setFont(footerFont);
+        footerLabel.setFont(GlobalSettings.FOOTER_FONT);
         footerPanel.add(footerLabel);
 
         guessTextField.addActionListener(guessListener);
@@ -124,7 +123,7 @@ public class MainWindow extends CenteredWindow {
         guessButton.addActionListener(guessListener);
         footerPanel.add(guessButton);
 
-        guessPointsLabel.setFont(footerFont);
+        guessPointsLabel.setFont(GlobalSettings.FOOTER_FONT);
         footerPanel.add(guessPointsLabel);
 
         panel.add(footerPanel, BorderLayout.SOUTH);

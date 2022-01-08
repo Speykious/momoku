@@ -11,6 +11,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TimerTask;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
@@ -29,7 +30,9 @@ public class MainWindow extends CenteredWindow {
     private int marginPaddingY;
     private int imageIndex;
     private ImageCanvas canvas;
-    private JTextField guessingTextField;
+
+    private JButton guessButton;
+    private JTextField guessTextField;
     private ActionListener guessListener;
 
     public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy) {
@@ -37,12 +40,11 @@ public class MainWindow extends CenteredWindow {
         marginPaddingX = mpx;
         marginPaddingY = mpy;
         canvas = new ImageCanvas();
-        guessingTextField = new JTextField(16);
-        guess(false);
+        guessTextField = new JTextField(16);
+        guessButton = new JButton("Guess");
 
         guessListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                guessingTextField.setText("");
                 guess();
             }
         };
@@ -75,8 +77,8 @@ public class MainWindow extends CenteredWindow {
         panel.setAlignmentY(Component.CENTER_ALIGNMENT);
         panel.setLayout(mainLayout);
         panel.setBorder(new EmptyBorder(
-            marginPaddingY, marginPaddingX,
-            marginPaddingY, marginPaddingX));
+                marginPaddingY, marginPaddingX,
+                marginPaddingY, marginPaddingX));
 
         // Header
         JLabel header = new JLabel("Mōmoku - Blind Test for the Weeb!", SwingConstants.CENTER);
@@ -92,14 +94,13 @@ public class MainWindow extends CenteredWindow {
         footerLabel.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(30f));
         footerPanel.add(footerLabel);
 
-        guessingTextField.addActionListener(guessListener);
-        footerPanel.add(guessingTextField);
+        guessTextField.addActionListener(guessListener);
+        footerPanel.add(guessTextField);
 
-        JButton nextButton = new JButton("Next");
-        nextButton.setPreferredSize(new Dimension(120, 50));
-        nextButton.addActionListener(guessListener);
+        guessButton.setPreferredSize(new Dimension(120, 50));
+        guessButton.addActionListener(guessListener);
+        footerPanel.add(guessButton);
 
-        footerPanel.add(nextButton);
         panel.add(footerPanel, BorderLayout.SOUTH);
 
         // Canvas
@@ -111,15 +112,13 @@ public class MainWindow extends CenteredWindow {
         panel.add(canvasPanel, BorderLayout.CENTER);
 
         add(panel);
-        pack();
 
+        pack();
         updateSize();
         updateInternalPosition();
         setResizable(false);
-    }
 
-    public void guess() {
-        guess(true);
+        nextImage();
     }
 
     private int updateImageIndex() {
@@ -131,9 +130,24 @@ public class MainWindow extends CenteredWindow {
         return imageIndex;
     }
 
-    public void guess(boolean repaint) {
+    public void nextImage() {
+        guessTextField.setText("");
         canvas.setImagePath(GlobalSettings.IMAGE_FILES[updateImageIndex()].getAbsolutePath());
-        if (repaint)
-            canvas.repaint();
+        canvas.repaint();
+    }
+
+    public void guess() {
+        guessButton.setEnabled(false);
+        guessTextField.setEnabled(false);
+        guessTextField.setText("nope");
+        GlobalSettings.TIMER.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                nextImage();
+                guessButton.setEnabled(true);
+                guessTextField.setEnabled(true);
+                guessTextField.requestFocus();
+            }
+        }, 1000);
     }
 }

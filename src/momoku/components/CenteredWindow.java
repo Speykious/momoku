@@ -1,4 +1,4 @@
-package momoku.practiceMode.components;
+package momoku.components;
 
 import java.awt.Dimension;
 

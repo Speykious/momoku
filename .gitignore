@@ -24,3 +24,6 @@ hs_err_pid*
 
 # Images (symlink or directory for testing)
 /images
+
+# Backup files
+*.bak

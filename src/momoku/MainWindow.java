@@ -42,7 +42,6 @@ public class MainWindow extends CenteredWindow {
                 System.exit(0);
                 break;
             default:
-                System.err.println("Showing '" + e.getActionCommand() + "'");
                 cardLayout.show(cardPanel, e.getActionCommand());
                 break;
         }

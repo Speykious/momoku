@@ -1,5 +1,6 @@
 package momoku.practiceMode;
 
+import momoku.GlobalSettings;
 import momoku.components.CenteredWindow;
 import momoku.components.ImageCanvas;
 
@@ -103,7 +104,7 @@ public class MainWindow extends CenteredWindow {
                 marginPaddingY, marginPaddingX));
 
         // Header
-        JLabel header = new JLabel("Mōmoku - Blind Test for the Weeb!", SwingConstants.CENTER);
+        JLabel header = new JLabel("Practice Mode", SwingConstants.CENTER);
         header.setFont(headerFont);
         panel.add(header, BorderLayout.NORTH);
 

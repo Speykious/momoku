@@ -1,4 +1,4 @@
-package momoku.practiceMode;
+package momoku;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -17,6 +17,6 @@ public class Main {
 
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
-        SwingUtilities.invokeLater(new MainWindow());
+        SwingUtilities.invokeLater(new momoku.practiceMode.MainWindow());
     }
 }

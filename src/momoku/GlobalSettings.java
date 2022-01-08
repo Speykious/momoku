@@ -1,4 +1,4 @@
-package momoku.practiceMode;
+package momoku;
 
 import java.awt.Font;
 import java.awt.Toolkit;

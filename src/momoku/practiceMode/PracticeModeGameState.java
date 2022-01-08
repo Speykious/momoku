@@ -1,9 +1,9 @@
 package momoku.practiceMode;
 
-public class PracticeGameState {
+public class PracticeModeGameState {
     private long points;
 
-    public PracticeGameState() {
+    public PracticeModeGameState() {
         reset();
     }
 

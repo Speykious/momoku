@@ -34,7 +34,7 @@ public class PracticeModePanel extends JPanel implements ActionListener {
     private JTextField guessTextField;
     private JLabel guessPointsLabel;
 
-    private PracticeGameState state;
+    private PracticeModeGameState state;
 
     public PracticeModePanel(ActionListener parent) {
         super();
@@ -42,7 +42,7 @@ public class PracticeModePanel extends JPanel implements ActionListener {
         this.parent = parent;
         marginPaddingX = 100;
         marginPaddingY = 50;
-        state = new PracticeGameState();
+        state = new PracticeModeGameState();
 
         // Main layout
         BorderLayout mainLayout = new BorderLayout();

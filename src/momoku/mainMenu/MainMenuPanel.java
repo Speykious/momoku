@@ -15,13 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class MainMenuPanel extends JPanel {
-    private int marginPaddingX;
-    private int marginPaddingY;
-
     public MainMenuPanel(ActionListener parent) {
-        marginPaddingX = 100;
-        marginPaddingY = 50;
-
         // Main layout
         BorderLayout mainLayout = new BorderLayout();
         mainLayout.setHgap(100);
@@ -30,9 +24,6 @@ public class MainMenuPanel extends JPanel {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         setAlignmentY(Component.CENTER_ALIGNMENT);
         setLayout(mainLayout);
-        setBorder(new EmptyBorder(
-                marginPaddingY, marginPaddingX,
-                marginPaddingY, marginPaddingX));
 
         // Header
         JLabel header = new JLabel("Mōmoku - Blind Test for the Weeb!", SwingConstants.CENTER);

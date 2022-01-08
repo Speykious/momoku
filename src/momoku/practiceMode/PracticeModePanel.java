@@ -25,8 +25,6 @@ import javax.swing.SwingConstants;
  */
 public class PracticeModePanel extends JPanel implements ActionListener {
     private ActionListener parent;
-    private int marginPaddingX;
-    private int marginPaddingY;
     private int imageIndex;
     private ImageCanvas canvas;
 
@@ -40,8 +38,6 @@ public class PracticeModePanel extends JPanel implements ActionListener {
         super();
 
         this.parent = parent;
-        marginPaddingX = 100;
-        marginPaddingY = 50;
         state = new PracticeModeGameState();
 
         // Main layout
@@ -52,9 +48,6 @@ public class PracticeModePanel extends JPanel implements ActionListener {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         setAlignmentY(Component.CENTER_ALIGNMENT);
         setLayout(mainLayout);
-        setBorder(new EmptyBorder(
-                marginPaddingY, marginPaddingX,
-                marginPaddingY, marginPaddingX));
 
         // Header
         JPanel headerPanel = new JPanel();

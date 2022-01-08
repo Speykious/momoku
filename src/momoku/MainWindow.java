@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.awt.CardLayout;
 
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class MainWindow extends CenteredWindow implements ActionListener {
     private JPanel cardPanel;
@@ -37,6 +38,7 @@ public class MainWindow extends CenteredWindow implements ActionListener {
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
+        cardPanel.setBorder(new EmptyBorder(100, 50, 100, 50));
 
         for (Entry<String, JPanel> entry : cards.entrySet())
             cardPanel.add(entry.getValue(), entry.getKey());

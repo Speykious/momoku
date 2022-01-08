@@ -13,19 +13,17 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class MainWindow extends CenteredWindow implements ActionListener {
+public final class MainWindow extends CenteredWindow implements ActionListener {
+    public static final MainWindow WINDOW = new MainWindow();
+
     private JPanel cardPanel;
     private CardLayout cardLayout;
 
     private HashMap<String, JPanel> cards;
 
-    public MainWindow(boolean resizable) {
-        super(resizable);
+    private MainWindow() {
+        super(false);
         cards = new HashMap<String, JPanel>();
-    }
-
-    public MainWindow() {
-        this(false);
     }
 
     @Override

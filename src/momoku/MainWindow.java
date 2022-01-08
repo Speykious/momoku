@@ -165,6 +165,7 @@ public class MainWindow extends CenteredWindow {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
 
+        // TODO: remove random boolean with actual guessing system (requires a database).
         if (GlobalSettings.RANDOM.nextBoolean()) {
             guessTextField.setText("nope");
         } else {

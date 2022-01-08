@@ -23,7 +23,7 @@ import javax.swing.SwingConstants;
 /**
  * Main window.
  */
-public class MainWindow extends JPanel implements ActionListener {
+public class PracticeModePanel extends JPanel implements ActionListener {
     private ActionListener parent;
     private int marginPaddingX;
     private int marginPaddingY;
@@ -36,7 +36,7 @@ public class MainWindow extends JPanel implements ActionListener {
 
     private PracticeGameState state;
 
-    public MainWindow(ActionListener parent) {
+    public PracticeModePanel(ActionListener parent) {
         super();
 
         this.parent = parent;

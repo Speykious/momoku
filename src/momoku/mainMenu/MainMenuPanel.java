@@ -1,5 +1,7 @@
 package momoku.mainMenu;
 
+import momoku.GlobalSettings;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -12,14 +14,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import momoku.GlobalSettings;
-import momoku.components.CenteredWindow;
-
-public class MainWindow extends JPanel {
+public class MainMenuPanel extends JPanel {
     private int marginPaddingX;
     private int marginPaddingY;
 
-    public MainWindow(ActionListener parent) {
+    public MainMenuPanel(ActionListener parent) {
         marginPaddingX = 100;
         marginPaddingY = 50;
 

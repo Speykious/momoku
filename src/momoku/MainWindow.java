@@ -1,6 +1,8 @@
 package momoku;
 
 import momoku.components.CenteredWindow;
+import momoku.mainMenu.MainMenuPanel;
+import momoku.practiceMode.PracticeModePanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,8 +31,8 @@ public class MainWindow extends CenteredWindow implements ActionListener {
     public void init() {
         setTitle("Mōmoku");
 
-        cards.put("mainMenu", new momoku.mainMenu.MainWindow(this));
-        cards.put("practiceMode", new momoku.practiceMode.MainWindow(this));
+        cards.put("mainMenu", new MainMenuPanel(this));
+        cards.put("practiceMode", new PracticeModePanel(this));
 
         cardPanel = new JPanel();
         cardLayout = new CardLayout();

@@ -35,17 +35,14 @@ public class MainMenuScreen extends Screen {
         // Center
         JPanel centerPanel = new JPanel();
         GridLayout flowLayout = new GridLayout(3, 1);
-        flowLayout.setHgap(40);
-        flowLayout.setVgap(40);
+        flowLayout.setHgap(80);
+        flowLayout.setVgap(80);
         centerPanel.setLayout(flowLayout);
         centerPanel.setBorder(new EmptyBorder(50, 150, 100, 150));
-
-        Dimension buttonSize = new Dimension(300, 100);
 
         JButton practiceModeButton = new JButton("Practice Mode");
         practiceModeButton.setActionCommand("practiceMode");
         practiceModeButton.addActionListener(parentListener);
-        practiceModeButton.setPreferredSize(buttonSize);
         practiceModeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         practiceModeButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         centerPanel.add(practiceModeButton);
@@ -53,7 +50,6 @@ public class MainMenuScreen extends Screen {
         JButton multiplayerButton = new JButton("Multiplayer");
         multiplayerButton.setActionCommand("multiplayer");
         multiplayerButton.addActionListener(parentListener);
-        multiplayerButton.setPreferredSize(buttonSize);
         multiplayerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         multiplayerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         centerPanel.add(multiplayerButton);
@@ -61,7 +57,6 @@ public class MainMenuScreen extends Screen {
         JButton exitButton = new JButton("Exit");
         exitButton.setActionCommand("exit");
         exitButton.addActionListener(parentListener);
-        exitButton.setPreferredSize(buttonSize);
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         exitButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         centerPanel.add(exitButton);

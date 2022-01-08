@@ -36,7 +36,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
-        cardPanel.setBorder(new EmptyBorder(100, 50, 100, 50));
+        cardPanel.setBorder(new EmptyBorder(50, 100, 50, 100));
 
         for (Entry<String, JPanel> entry : cards.entrySet())
             cardPanel.add(entry.getValue(), entry.getKey());

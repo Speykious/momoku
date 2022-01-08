@@ -1,7 +1,6 @@
 package momoku;
 
 import momoku.components.CenteredWindow;
-import momoku.mainMenu.MainMenuScreen;
 import momoku.practiceMode.PracticeModeScreen;
 
 import java.awt.event.ActionEvent;

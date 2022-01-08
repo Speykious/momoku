@@ -1,6 +1,5 @@
-package momoku.mainMenu;
+package momoku;
 
-import momoku.GlobalSettings;
 import momoku.components.Screen;
 
 import java.awt.BorderLayout;

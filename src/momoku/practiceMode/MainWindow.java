@@ -10,7 +10,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.TimerTask;
 
 import javax.swing.border.EmptyBorder;
@@ -34,7 +33,6 @@ public class MainWindow extends CenteredWindow {
     private JButton guessButton;
     private JTextField guessTextField;
     private JLabel guessPointsLabel;
-    private ActionListener guessListener;
 
     private PracticeGameState state;
 
@@ -46,12 +44,6 @@ public class MainWindow extends CenteredWindow {
         guessTextField = new JTextField(16);
         guessButton = new JButton("Guess");
         guessPointsLabel = new JLabel("0 pts");
-
-        guessListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                guess();
-            }
-        };
 
         state = pgs;
     }
@@ -94,18 +86,18 @@ public class MainWindow extends CenteredWindow {
         mainLayout.setHgap(20);
         mainLayout.setVgap(20);
 
-        JPanel panel = new JPanel();
-        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        panel.setLayout(mainLayout);
-        panel.setBorder(new EmptyBorder(
+        mainPanel = new JPanel();
+        mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        mainPanel.setLayout(mainLayout);
+        mainPanel.setBorder(new EmptyBorder(
                 marginPaddingY, marginPaddingX,
                 marginPaddingY, marginPaddingX));
 
         // Header
         JLabel header = new JLabel("Practice Mode", SwingConstants.CENTER);
         header.setFont(GlobalSettings.HEADER_FONT);
-        panel.add(header, BorderLayout.NORTH);
+        mainPanel.add(header, BorderLayout.NORTH);
 
         // Footer
         JPanel footerPanel = new JPanel();
@@ -116,17 +108,17 @@ public class MainWindow extends CenteredWindow {
         footerLabel.setFont(GlobalSettings.FOOTER_FONT);
         footerPanel.add(footerLabel);
 
-        guessTextField.addActionListener(guessListener);
+        guessTextField.addActionListener(this);
         footerPanel.add(guessTextField);
 
         guessButton.setPreferredSize(new Dimension(120, 50));
-        guessButton.addActionListener(guessListener);
+        guessButton.addActionListener(this);
         footerPanel.add(guessButton);
 
         guessPointsLabel.setFont(GlobalSettings.FOOTER_FONT);
         footerPanel.add(guessPointsLabel);
 
-        panel.add(footerPanel, BorderLayout.SOUTH);
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         // Canvas
         JPanel canvasPanel = new JPanel();
@@ -134,9 +126,9 @@ public class MainWindow extends CenteredWindow {
         canvasPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
         canvasPanel.setBorder(BorderFactory.createLineBorder(Color.getHSBColor(0f, 0f, .5f), 1));
         canvasPanel.add(canvas);
-        panel.add(canvasPanel, BorderLayout.CENTER);
+        mainPanel.add(canvasPanel, BorderLayout.CENTER);
 
-        add(panel);
+        add(mainPanel);
 
         pack();
         updateSize();
@@ -161,7 +153,8 @@ public class MainWindow extends CenteredWindow {
         canvas.repaint();
     }
 
-    public void guess() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
 

@@ -1,10 +1,14 @@
 package momoku.components;
 
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public abstract class CenteredWindow extends JFrame implements Runnable {
+public abstract class CenteredWindow extends JFrame implements Runnable, ActionListener {
+    protected CenteredWindow parent;
+    protected JPanel mainPanel;
     private boolean visible;
 
     // Absolute Size coordinate values are between 0 and width/height
@@ -114,5 +118,17 @@ public abstract class CenteredWindow extends JFrame implements Runnable {
     public void setSizeRelative(boolean value) {
         isSizeRelative = value;
         updateInternalSize();
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public CenteredWindow getParent() {
+        return parent;
+    }
+
+    public void setParent(CenteredWindow parent) {
+        this.parent = parent;
     }
 }

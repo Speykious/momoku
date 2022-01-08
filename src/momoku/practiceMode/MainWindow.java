@@ -1,7 +1,7 @@
-package momoku;
+package momoku.practiceMode;
 
-import momoku.components.CenteredWindow;
-import momoku.components.ImageCanvas;
+import momoku.practiceMode.components.CenteredWindow;
+import momoku.practiceMode.components.ImageCanvas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

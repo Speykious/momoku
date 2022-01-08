@@ -1,4 +1,4 @@
-package momoku;
+package momoku.practiceMode;
 
 public class PracticeGameState {
     private long points;

@@ -1,4 +1,4 @@
-package momoku;
+package momoku.practiceMode;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;

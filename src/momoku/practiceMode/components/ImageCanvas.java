@@ -1,4 +1,4 @@
-package momoku.components;
+package momoku.practiceMode.components;
 
 import java.awt.Canvas;
 import java.awt.Graphics;

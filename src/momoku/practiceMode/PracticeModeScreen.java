@@ -24,7 +24,6 @@ import javax.swing.SwingConstants;
  * Main window.
  */
 public class PracticeModeScreen extends Screen implements ActionListener {
-    private int imageIndex;
     private ImageCanvas canvas;
 
     private JButton guessButton;
@@ -103,19 +102,10 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         nextImage();
     }
 
-    private int updateImageIndex() {
-        int previousIndex;
-        do {
-            previousIndex = imageIndex;
-            imageIndex = Math.abs(GlobalSettings.RANDOM.nextInt()) % GlobalSettings.IMAGE_FILES.length;
-        } while (imageIndex == previousIndex);
-        return imageIndex;
-    }
-
     public void nextImage() {
         guessTextField.setText("");
         guessPointsLabel.setText(state.getPoints() + " pts");
-        canvas.setImagePath(GlobalSettings.IMAGE_FILES[updateImageIndex()].getAbsolutePath());
+        canvas.setImagePath(GlobalSettings.IMAGE_FILES[state.updateImageIndex()].getAbsolutePath());
         canvas.repaint();
     }
 

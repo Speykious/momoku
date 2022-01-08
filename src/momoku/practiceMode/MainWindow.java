@@ -1,7 +1,6 @@
 package momoku.practiceMode;
 
 import momoku.GlobalSettings;
-import momoku.components.CenteredWindow;
 import momoku.components.ImageCanvas;
 
 import java.awt.BorderLayout;
@@ -10,12 +9,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.TimerTask;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -24,7 +23,8 @@ import javax.swing.SwingConstants;
 /**
  * Main window.
  */
-public class MainWindow extends CenteredWindow {
+public class MainWindow extends JPanel implements ActionListener {
+    private ActionListener parent;
     private int marginPaddingX;
     private int marginPaddingY;
     private int imageIndex;
@@ -36,61 +36,23 @@ public class MainWindow extends CenteredWindow {
 
     private PracticeGameState state;
 
-    public MainWindow(boolean visible, float sx, float sy, boolean srel, int mpx, int mpy, PracticeGameState pgs) {
-        super(visible, sx, sy, srel);
-        marginPaddingX = mpx;
-        marginPaddingY = mpy;
-        canvas = new ImageCanvas();
-        guessTextField = new JTextField(16);
-        guessButton = new JButton("Guess");
-        guessPointsLabel = new JLabel("0 pts");
+    public MainWindow(ActionListener parent) {
+        super();
 
-        state = pgs;
-    }
-
-    public MainWindow(boolean visible, float sx, float sy, boolean srel, PracticeGameState pgs) {
-        this(visible, sx, sy, srel, 100, 50, pgs);
-    }
-
-    public MainWindow(boolean visible, float sx, float sy, boolean srel) {
-        this(visible, sx, sy, srel, new PracticeGameState());
-    }
-
-    public MainWindow(boolean visible, float sx, float sy, PracticeGameState pgs) {
-        this(visible, sx, sy, false, pgs);
-    }
-
-    public MainWindow(boolean visible, float sx, float sy) {
-        this(visible, sx, sy, false);
-    }
-
-    public MainWindow(boolean visible, PracticeGameState pgs) {
-        this(visible, .8f, .8f, true, pgs);
-    }
-
-    public MainWindow(boolean visible) {
-        this(visible, new PracticeGameState());
-    }
-
-    public MainWindow() {
-        this(false);
-    }
-
-    @Override
-    public void init() {
-        setTitle("Mōmoku");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.parent = parent;
+        marginPaddingX = 100;
+        marginPaddingY = 50;
+        state = new PracticeGameState();
 
         // Main layout
         BorderLayout mainLayout = new BorderLayout();
         mainLayout.setHgap(20);
         mainLayout.setVgap(20);
 
-        mainPanel = new JPanel();
-        mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        mainPanel.setLayout(mainLayout);
-        mainPanel.setBorder(new EmptyBorder(
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+        setAlignmentY(Component.CENTER_ALIGNMENT);
+        setLayout(mainLayout);
+        setBorder(new EmptyBorder(
                 marginPaddingY, marginPaddingX,
                 marginPaddingY, marginPaddingX));
 
@@ -103,14 +65,14 @@ public class MainWindow extends CenteredWindow {
         backButton.setPreferredSize(new Dimension(120, 50));
         backButton.setActionCommand("back");
         backButton.addActionListener(this);
-        
+
         headerPanel.add(backButton);
-        
+
         JLabel header = new JLabel("Practice Mode", SwingConstants.CENTER);
         header.setFont(GlobalSettings.HEADER_FONT);
         headerPanel.add(header);
 
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        add(headerPanel, BorderLayout.NORTH);
 
         // Footer
         JPanel footerPanel = new JPanel();
@@ -121,34 +83,31 @@ public class MainWindow extends CenteredWindow {
         footerLabel.setFont(GlobalSettings.FOOTER_FONT);
         footerPanel.add(footerLabel);
 
+        guessTextField = new JTextField(16);
         guessTextField.addActionListener(this);
         guessTextField.setActionCommand("guess");
         footerPanel.add(guessTextField);
 
+        guessButton = new JButton("Guess");
         guessButton.setPreferredSize(new Dimension(120, 50));
         guessButton.setActionCommand("guess");
         guessButton.addActionListener(this);
         footerPanel.add(guessButton);
 
+        guessPointsLabel = new JLabel("0 pts");
         guessPointsLabel.setFont(GlobalSettings.FOOTER_FONT);
         footerPanel.add(guessPointsLabel);
 
-        mainPanel.add(footerPanel, BorderLayout.SOUTH);
+        add(footerPanel, BorderLayout.SOUTH);
 
         // Canvas
         JPanel canvasPanel = new JPanel();
         canvasPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         canvasPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
         canvasPanel.setBorder(BorderFactory.createLineBorder(Color.getHSBColor(0f, 0f, .5f), 1));
+        canvas = new ImageCanvas();
         canvasPanel.add(canvas);
-        mainPanel.add(canvasPanel, BorderLayout.CENTER);
-
-        add(mainPanel);
-
-        pack();
-        updateSize();
-        updateInternalPosition();
-        setResizable(false);
+        add(canvasPanel, BorderLayout.CENTER);
 
         nextImage();
     }
@@ -173,7 +132,8 @@ public class MainWindow extends CenteredWindow {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
 
-        // TODO: remove random boolean with actual guessing system (requires a database).
+        // TODO: remove random boolean with actual guessing system (requires a
+        // database).
         if (GlobalSettings.RANDOM.nextBoolean()) {
             guessTextField.setText("nope");
         } else {

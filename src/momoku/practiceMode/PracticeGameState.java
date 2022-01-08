@@ -4,7 +4,7 @@ public class PracticeGameState {
     private long points;
 
     public PracticeGameState() {
-        points = 0;
+        reset();
     }
 
     public long getPoints() {
@@ -13,5 +13,9 @@ public class PracticeGameState {
 
     public void addPoint() {
         points++;
+    }
+
+    public void reset() {
+        points = 0;
     }
 }

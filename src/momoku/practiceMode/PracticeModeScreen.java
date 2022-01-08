@@ -2,6 +2,7 @@ package momoku.practiceMode;
 
 import momoku.GlobalSettings;
 import momoku.components.ImageCanvas;
+import momoku.components.Screen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TimerTask;
 
-import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,8 +23,7 @@ import javax.swing.SwingConstants;
 /**
  * Main window.
  */
-public class PracticeModePanel extends JPanel implements ActionListener {
-    private ActionListener parent;
+public class PracticeModeScreen extends Screen implements ActionListener {
     private int imageIndex;
     private ImageCanvas canvas;
 
@@ -34,10 +33,9 @@ public class PracticeModePanel extends JPanel implements ActionListener {
 
     private PracticeModeGameState state;
 
-    public PracticeModePanel(ActionListener parent) {
+    public PracticeModeScreen() {
         super();
 
-        this.parent = parent;
         state = new PracticeModeGameState();
 
         // Main layout
@@ -149,7 +147,7 @@ public class PracticeModePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "back":
-                parent.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
+                parentListener.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
                 state.reset();
                 nextImage();
                 break;

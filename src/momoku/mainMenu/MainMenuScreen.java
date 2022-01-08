@@ -1,12 +1,12 @@
 package momoku.mainMenu;
 
 import momoku.GlobalSettings;
+import momoku.components.Screen;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
@@ -14,8 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class MainMenuPanel extends JPanel {
-    public MainMenuPanel(ActionListener parent) {
+public class MainMenuScreen extends Screen {
+    public MainMenuScreen() {
+        super();
+
         // Main layout
         BorderLayout mainLayout = new BorderLayout();
         mainLayout.setHgap(100);
@@ -42,7 +44,7 @@ public class MainMenuPanel extends JPanel {
 
         JButton practiceModeButton = new JButton("Practice Mode");
         practiceModeButton.setActionCommand("practiceMode");
-        practiceModeButton.addActionListener(parent);
+        practiceModeButton.addActionListener(parentListener);
         practiceModeButton.setPreferredSize(buttonSize);
         practiceModeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         practiceModeButton.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -50,7 +52,7 @@ public class MainMenuPanel extends JPanel {
 
         JButton multiplayerButton = new JButton("Multiplayer");
         multiplayerButton.setActionCommand("multiplayer");
-        multiplayerButton.addActionListener(parent);
+        multiplayerButton.addActionListener(parentListener);
         multiplayerButton.setPreferredSize(buttonSize);
         multiplayerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         multiplayerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -58,7 +60,7 @@ public class MainMenuPanel extends JPanel {
 
         JButton exitButton = new JButton("Exit");
         exitButton.setActionCommand("exit");
-        exitButton.addActionListener(parent);
+        exitButton.addActionListener(parentListener);
         exitButton.setPreferredSize(buttonSize);
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         exitButton.setAlignmentY(Component.CENTER_ALIGNMENT);

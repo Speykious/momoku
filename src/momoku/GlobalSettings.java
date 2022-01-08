@@ -15,6 +15,9 @@ public final class GlobalSettings {
     public static final RandomGenerator RANDOM = new Random((new Date()).getTime());
     public static final Timer TIMER = new Timer();
 
+    public static final Font HEADER_FONT = DEFAULT_FONT.deriveFont(Font.BOLD, 50f);
+    public static final Font FOOTER_FONT = DEFAULT_FONT.deriveFont(30f);
+
     public static final File IMAGE_DIRECTORY = new File("images");
     public static final File[] IMAGE_FILES = IMAGE_DIRECTORY.listFiles(new FilenameFilter() {
         public boolean accept(File dir, String filename) {

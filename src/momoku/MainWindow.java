@@ -33,39 +33,61 @@ public class MainWindow extends CenteredWindow {
 
     private JButton guessButton;
     private JTextField guessTextField;
+    private JLabel guessPointsLabel;
     private ActionListener guessListener;
 
-    public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy) {
+    private PracticeGameState state;
+
+    public MainWindow(float sx, float sy, boolean srel, int mpx, int mpy, PracticeGameState pgs) {
         super(sx, sy, srel);
         marginPaddingX = mpx;
         marginPaddingY = mpy;
         canvas = new ImageCanvas();
         guessTextField = new JTextField(16);
         guessButton = new JButton("Guess");
+        guessPointsLabel = new JLabel("0 pts");
 
         guessListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 guess();
             }
         };
+
+        state = pgs;
+    }
+
+    public MainWindow(float sx, float sy, boolean srel, PracticeGameState pgs) {
+        this(sx, sy, srel, 100, 50, pgs);
     }
 
     public MainWindow(float sx, float sy, boolean srel) {
-        this(sx, sy, srel, 100, 50);
+        this(sx, sy, srel, new PracticeGameState());
+    }
+
+    public MainWindow(float sx, float sy, PracticeGameState pgs) {
+        this(sx, sy, false, pgs);
     }
 
     public MainWindow(float sx, float sy) {
         this(sx, sy, false);
     }
 
+    public MainWindow(PracticeGameState pgs) {
+        this(.8f, .8f, true, pgs);
+    }
+
     public MainWindow() {
-        this(.8f, .8f, true);
+        this(new PracticeGameState());
     }
 
     @Override
     public void init() {
         setTitle("Mōmoku");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Fonts
+        Font headerFont = GlobalSettings.DEFAULT_FONT.deriveFont(Font.BOLD, 50f);
+        Font footerFont = GlobalSettings.DEFAULT_FONT.deriveFont(30f);
 
         // Main layout
         BorderLayout mainLayout = new BorderLayout();
@@ -82,7 +104,7 @@ public class MainWindow extends CenteredWindow {
 
         // Header
         JLabel header = new JLabel("Mōmoku - Blind Test for the Weeb!", SwingConstants.CENTER);
-        header.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(Font.BOLD, 50f));
+        header.setFont(headerFont);
         panel.add(header, BorderLayout.NORTH);
 
         // Footer
@@ -91,7 +113,7 @@ public class MainWindow extends CenteredWindow {
         footerPanel.setLayout(footerLayout);
 
         JLabel footerLabel = new JLabel("Who is this?", SwingConstants.CENTER);
-        footerLabel.setFont(GlobalSettings.DEFAULT_FONT.deriveFont(30f));
+        footerLabel.setFont(footerFont);
         footerPanel.add(footerLabel);
 
         guessTextField.addActionListener(guessListener);
@@ -100,6 +122,9 @@ public class MainWindow extends CenteredWindow {
         guessButton.setPreferredSize(new Dimension(120, 50));
         guessButton.addActionListener(guessListener);
         footerPanel.add(guessButton);
+
+        guessPointsLabel.setFont(footerFont);
+        footerPanel.add(guessPointsLabel);
 
         panel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -139,10 +164,19 @@ public class MainWindow extends CenteredWindow {
     public void guess() {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
-        guessTextField.setText("nope");
+
+        if (GlobalSettings.RANDOM.nextBoolean()) {
+            guessTextField.setText("nope");
+        } else {
+            guessTextField.setText("correct!");
+            state.addPoint();
+        }
+
         GlobalSettings.TIMER.schedule(new TimerTask() {
             @Override
             public void run() {
+                guessPointsLabel.setText(state.getPoints() + " pts");
+
                 nextImage();
                 guessButton.setEnabled(true);
                 guessTextField.setEnabled(true);

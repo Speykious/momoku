@@ -32,6 +32,7 @@ public class MainWindow extends CenteredWindow {
         cardPanel.add(practiceMode.getMainPanel(), "practiceMode");
 
         add(cardPanel);
+        pack();
     }
 
     @Override

@@ -95,9 +95,22 @@ public class MainWindow extends CenteredWindow {
                 marginPaddingY, marginPaddingX));
 
         // Header
+        JPanel headerPanel = new JPanel();
+        FlowLayout headerLayout = new FlowLayout(FlowLayout.CENTER, 100, 0);
+        headerPanel.setLayout(headerLayout);
+
+        JButton backButton = new JButton("Go Back");
+        backButton.setPreferredSize(new Dimension(120, 50));
+        backButton.setActionCommand("back");
+        backButton.addActionListener(this);
+        
+        headerPanel.add(backButton);
+        
         JLabel header = new JLabel("Practice Mode", SwingConstants.CENTER);
         header.setFont(GlobalSettings.HEADER_FONT);
-        mainPanel.add(header, BorderLayout.NORTH);
+        headerPanel.add(header);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Footer
         JPanel footerPanel = new JPanel();
@@ -109,9 +122,11 @@ public class MainWindow extends CenteredWindow {
         footerPanel.add(footerLabel);
 
         guessTextField.addActionListener(this);
+        guessTextField.setActionCommand("guess");
         footerPanel.add(guessTextField);
 
         guessButton.setPreferredSize(new Dimension(120, 50));
+        guessButton.setActionCommand("guess");
         guessButton.addActionListener(this);
         footerPanel.add(guessButton);
 
@@ -149,12 +164,12 @@ public class MainWindow extends CenteredWindow {
 
     public void nextImage() {
         guessTextField.setText("");
+        guessPointsLabel.setText(state.getPoints() + " pts");
         canvas.setImagePath(GlobalSettings.IMAGE_FILES[updateImageIndex()].getAbsolutePath());
         canvas.repaint();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    private void guess() {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
 
@@ -169,13 +184,25 @@ public class MainWindow extends CenteredWindow {
         GlobalSettings.TIMER.schedule(new TimerTask() {
             @Override
             public void run() {
-                guessPointsLabel.setText(state.getPoints() + " pts");
-
                 nextImage();
                 guessButton.setEnabled(true);
                 guessTextField.setEnabled(true);
                 guessTextField.requestFocus();
             }
         }, 1000);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "back":
+                parent.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
+                state.reset();
+                nextImage();
+                break;
+            case "guess":
+                guess();
+                break;
+        }
     }
 }

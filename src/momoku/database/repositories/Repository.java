@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +67,9 @@ public abstract class Repository<M extends Model<K>, K> {
     protected abstract M get(ResultSet result) throws SQLException;
 
     public void cache(M model) {
+        if (model == null)
+            return;
+
         cache.put(model.getPrimaryKey(), model);
     }
 
@@ -74,11 +78,17 @@ public abstract class Repository<M extends Model<K>, K> {
             cache(model);
     }
 
+    private M getCached(ResultSet result) throws SQLException {
+        M model = get(result);
+        cache(model);
+        return model;
+    }
+
     private List<M> getModels(PreparedStatement statement) throws SQLException {
         List<M> models = new ArrayList<M>();
         ResultSet result = statement.executeQuery();
-        for (M model = get(result); model != null; model = get(result))
-            models.add(model);
+        while (result.next())
+            models.add(getCached(result));
         return models;
     }
 
@@ -92,9 +102,7 @@ public abstract class Repository<M extends Model<K>, K> {
         if (!result.next())
             return null;
 
-        model = get(result);
-        if (model != null)
-            cache(model);
+        model = getCached(result);
 
         return model;
     }
@@ -106,6 +114,7 @@ public abstract class Repository<M extends Model<K>, K> {
     }
 
     public boolean update(M model) throws SQLException {
+        cache(model);
         populateColumns(updateStatement, 1, model);
         populatePrimaryKey(updateStatement, columns.size() + 1, model.getPrimaryKey());
         return updateStatement.execute();
@@ -129,7 +138,10 @@ public abstract class Repository<M extends Model<K>, K> {
 
     public M getRandom() throws SQLException {
         getRandomStatement.setInt(1, 1);
-        return get(getRandomStatement.executeQuery());
+        ResultSet result = getRandomStatement.executeQuery();
+        if (!result.next())
+            return null;
+        return getCached(result);
     }
 
     public List<M> getRandoms(int count) throws SQLException {

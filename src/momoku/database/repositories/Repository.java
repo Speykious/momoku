@@ -87,18 +87,16 @@ public abstract class Repository<M extends Model<K>, K> {
         return model;
     }
 
-    public M update(M model) throws SQLException {
+    public boolean update(M model) throws SQLException {
         populateColumns(updateStatement, 1, model);
         populatePrimaryKey(updateStatement, columns.size() + 1, model.getPrimaryKey());
-        updateStatement.executeUpdate();
-        return model;
+        return updateStatement.execute();
     }
 
-    public M save(M model) throws SQLException {
+    public boolean save(M model) throws SQLException {
         cache(model);
         populateColumns(saveStatement, 1, model);
-        saveStatement.executeUpdate();
-        return model;
+        return saveStatement.execute();
     }
 
     public boolean delete(K key) throws SQLException {

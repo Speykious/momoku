@@ -83,33 +83,25 @@ public class UserRegistration extends CenteredWindow {
         btnNewButton = new JButton("Register");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String firstName = firstname.getText();
-                String lastName = lastname.getText();
                 String emailId = email.getText();
                 String userName = username.getText();
-                String mobileNumber = mob.getText();
-                int len = mobileNumber.length();
-                String password = passwordField.getText();
-
-                String msg = "" + firstName;
+                String password = new String(passwordField.getPassword());
+                String msg = "" + userName;
                 msg += " \n";
-                if (len != 10) {
-                    JOptionPane.showMessageDialog(btnNewButton, "Enter a valid mobile number");
-                }
 
                 try {
                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/swing_demo", "root", "root");
 
-                    String query = "INSERT INTO account values('" + firstName + "','" + lastName + "','" + userName + "','" +
-                        password + "','" + emailId + "','" + mobileNumber + "')";
+                    String query = "INSERT INTO account values('" + userName + "','" +
+                        password + "','" + emailId + "')";
 
                     Statement sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
                     if (x == 0) {
-                        JOptionPane.showMessageDialog(btnNewButton, "This is alredy exist");
+                        JOptionPane.showMessageDialog(btnNewButton, "This account alredy exists");
                     } else {
                         JOptionPane.showMessageDialog(btnNewButton,
-                            "Welcome, " + msg + "Your account is sucessfully created");
+                            "Welcome, " + msg + "Your account has been sucessfully created");
                     }
                     connection.close();
                 } catch (Exception exception) {

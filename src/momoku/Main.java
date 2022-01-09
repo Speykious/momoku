@@ -18,18 +18,5 @@ public class Main {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
         SwingUtilities.invokeLater(new MainWindow(true));
-    }
-        /**
-     * Launch the application.
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    UserRegistration frame = new UserRegistration();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    */
+
 }

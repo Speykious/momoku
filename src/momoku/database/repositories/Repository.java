@@ -6,15 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import momoku.database.Database;
 import momoku.database.models.Model;
 
-public abstract class Repository<S extends IRepository<S, M, K>, M extends Model<M, K, S>, K> implements IRepository<S, M, K> {
+public abstract class Repository<S extends IRepository<S, M, K>, M extends Model<M, K, S>, K>
+        implements IRepository<S, M, K> {
     private final String tableName;
     private final String primaryKeyName;
     private final List<String> columns;
+    private final HashMap<K, M> cache;
 
     private PreparedStatement getStatement;
     private PreparedStatement updateStatement;
@@ -26,18 +29,25 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
         this.tableName = tableName;
         this.primaryKeyName = primaryKeyName;
         this.columns = columns;
+        cache = new HashMap<K, M>();
 
         Connection c = Database.connection;
 
         try {
             var comma = Collectors.joining(", ");
-            String columnsSet = columns.stream().map((String column) -> { return column + " = ?"; }).collect(comma);
+            String columnsSet = columns.stream().map((String column) -> {
+                return column + " = ?";
+            }).collect(comma);
             String columnsInto = columns.stream().collect(comma);
-            String columnsValues = columns.stream().map((String _column) -> { return "?"; }).collect(comma);
+            String columnsValues = columns.stream().map((String _column) -> {
+                return "?";
+            }).collect(comma);
 
-            getStatement = c.prepareStatement("SELECT * FROM " + tableName + " WHERE " + primaryKeyName + " = ? LIMIT 1");
+            getStatement = c
+                    .prepareStatement("SELECT * FROM " + tableName + " WHERE " + primaryKeyName + " = ? LIMIT 1");
             updateStatement = c.prepareStatement("UPDATE " + tableName + " SET " + columnsSet + " WHERE id = ?");
-            saveStatement = c.prepareStatement("INSERT INTO " + tableName + " (" + columnsInto + ") VALUES (" + columnsValues + ")");
+            saveStatement = c.prepareStatement(
+                    "INSERT INTO " + tableName + " (" + columnsInto + ") VALUES (" + columnsValues + ")");
             deleteStatement = c.prepareStatement("DELETE FROM " + tableName + " WHERE id = ?");
             listStatement = c.prepareStatement("SELECT * FROM " + tableName);
         } catch (SQLException e) {
@@ -46,18 +56,35 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
         }
     }
 
-
     protected abstract void populatePrimaryKey(PreparedStatement statement, int i, K primaryKey) throws SQLException;
+
     protected abstract void populateColumns(PreparedStatement statement, int i, M model) throws SQLException;
+
+    public void cache(M model) {
+        cache.put(model.getPrimaryKey(), model);
+    }
+
+    public void cacheAll() throws SQLException {
+        for (M model : list())
+            cache(model);
+    }
 
     @Override
     public M get(K key) throws SQLException {
+        M model = cache.get(key);
+        if (model != null)
+            return model;
+
         populatePrimaryKey(getStatement, 1, key);
         ResultSet result = getStatement.executeQuery();
         if (!result.next())
             return null;
 
-        return get(result);
+        model = get(result);
+        if (model != null)
+            cache(model);
+
+        return model;
     }
 
     @Override
@@ -70,6 +97,7 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
 
     @Override
     public M save(M model) throws SQLException {
+        cache(model);
         populateColumns(saveStatement, 1, model);
         saveStatement.executeUpdate();
         return model;
@@ -77,6 +105,7 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
 
     @Override
     public boolean delete(K key) throws SQLException {
+        cache.remove(key);
         populatePrimaryKey(deleteStatement, 1, key);
         return deleteStatement.execute();
     }

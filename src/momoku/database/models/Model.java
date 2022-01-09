@@ -15,4 +15,24 @@ public abstract class Model<K> {
     public K getPrimaryKey() {
         return primaryKey;
     }
+
+    public boolean equals(Model<K> other) {
+        return primaryKey.equals(other.primaryKey);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+
+        if (this == obj)
+            return true;
+        
+        if (getClass() != obj.getClass())
+            return false;
+
+        final Model<K> other = (Model<K>)obj;
+        return equals(other);
+    }
 }

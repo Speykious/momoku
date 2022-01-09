@@ -23,16 +23,11 @@ public class RoomRepository extends Repository<RoomRepository, Room, Integer> {
 
     @Override
     public Room get(ResultSet result) throws SQLException {
-        if (!result.next())
-            return null;
-
-        String ownerUsername = result.getString("owner");
-
         return new Room(
                 result.getInt("id"),
                 result.getString("title"),
                 result.getString("pass"),
-                UserRepository.REPOSITORY.get(ownerUsername),
+                UserRepository.REPOSITORY.get(result.getString("owner")),
                 result.getBoolean("playing"),
                 result.getInt("rounds"),
                 result.getDate("creation_date"));

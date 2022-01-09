@@ -24,9 +24,6 @@ public final class UserRepository extends Repository<UserRepository, User, Strin
 
     @Override
     public User get(ResultSet result) throws SQLException {
-        if (!result.next())
-            return null;
-
         return new User(
                 result.getString("username"),
                 result.getString("password"),

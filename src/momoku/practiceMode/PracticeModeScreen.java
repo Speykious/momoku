@@ -111,7 +111,10 @@ public class PracticeModeScreen extends Screen implements ActionListener {
     public void nextImage() {
         guessTextField.setText("");
         guessPointsLabel.setText(state.getPoints() + " pts");
-        canvas.setImagePath(GlobalSettings.IMAGE_FILES[state.updateImageIndex()].getAbsolutePath());
+
+        canvas.setImagePath(Path.of(
+            GlobalSettings.IMAGE_DIRECTORY.getAbsolutePath(),
+            state.updateImage().getFilename()).toString());
         canvas.repaint();
     }
 

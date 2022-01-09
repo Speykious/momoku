@@ -1,10 +1,14 @@
 package momoku.practiceMode;
 
-import momoku.GlobalSettings;
+import java.sql.SQLException;
+import java.util.List;
+
+import momoku.database.models.Image;
+import momoku.database.repositories.ImageRepository;
 
 public class PracticeModeGameState {
     private long points;
-    private int imageIndex;
+    private Image image;
 
     public PracticeModeGameState() {
         reset();
@@ -20,15 +24,20 @@ public class PracticeModeGameState {
 
     public void reset() {
         points = 0;
-        updateImageIndex();
+        updateImage();
     }
 
-    public int updateImageIndex() {
-        int previousIndex;
-        do {
-            previousIndex = imageIndex;
-            imageIndex = Math.abs(GlobalSettings.RANDOM.nextInt()) % GlobalSettings.IMAGE_FILES.length;
-        } while (imageIndex == previousIndex);
-        return imageIndex;
+    public Image updateImage() {
+        try {
+            List<Image> images = ImageRepository.REPOSITORY.getRandoms(2);
+            if (image != images.get(0))
+                image = images.get(0);
+            else
+                image = images.get(1);
+            return image;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

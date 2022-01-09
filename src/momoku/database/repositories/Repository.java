@@ -19,6 +19,7 @@ public abstract class Repository<M extends Model<K>, K> {
     private final HashMap<K, M> cache;
 
     private PreparedStatement getStatement;
+    private PreparedStatement searchStatement;
     private PreparedStatement updateStatement;
     private PreparedStatement saveStatement;
     private PreparedStatement deleteStatement;
@@ -42,8 +43,9 @@ public abstract class Repository<M extends Model<K>, K> {
                 return "?";
             }).collect(comma);
 
-            getStatement = c
-                    .prepareStatement("SELECT * FROM " + tableName + " WHERE " + primaryKeyName + " = ? LIMIT 1");
+            getStatement = c.prepareStatement(
+                    "SELECT * FROM " + tableName + " WHERE " + primaryKeyName + " = ? LIMIT 1");
+            searchStatement = c.prepareStatement("SELECT * FROM " + tableName + " WHERE ? = ?");
             updateStatement = c.prepareStatement("UPDATE " + tableName + " SET " + columnsSet + " WHERE id = ?");
             saveStatement = c.prepareStatement(
                     "INSERT INTO " + tableName + " (" + columnsInto + ") VALUES (" + columnsValues + ")");
@@ -70,6 +72,14 @@ public abstract class Repository<M extends Model<K>, K> {
             cache(model);
     }
 
+    private List<M> getModels(PreparedStatement statement) throws SQLException {
+        List<M> models = new ArrayList<M>();
+        ResultSet result = statement.executeQuery();
+        for (M model = get(result); model != null; model = get(result))
+            models.add(model);
+        return models;
+    }
+
     public M get(K key) throws SQLException {
         M model = cache.get(key);
         if (model != null)
@@ -85,6 +95,12 @@ public abstract class Repository<M extends Model<K>, K> {
             cache(model);
 
         return model;
+    }
+
+    public List<M> search(String column, Object value) throws SQLException {
+        searchStatement.setString(1, column);
+        searchStatement.setObject(2, value);
+        return getModels(searchStatement);
     }
 
     public boolean update(M model) throws SQLException {
@@ -106,11 +122,7 @@ public abstract class Repository<M extends Model<K>, K> {
     }
 
     public List<M> list() throws SQLException {
-        List<M> models = new ArrayList<M>();
-        ResultSet result = listStatement.executeQuery();
-        for (M model = get(result); model != null; model = get(result))
-            models.add(model);
-        return models;
+        return getModels(listStatement);
     }
 
     public String getTableName() {

@@ -21,6 +21,7 @@ public class RoomRepository extends Repository<RoomRepository, Room, Integer> {
                 "creation_date"));
     }
 
+    @Override
     public Room get(ResultSet result) throws SQLException {
         if (!result.next())
             return null;

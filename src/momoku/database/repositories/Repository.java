@@ -12,8 +12,7 @@ import java.util.List;
 import momoku.database.Database;
 import momoku.database.models.Model;
 
-public abstract class Repository<S extends IRepository<S, M, K>, M extends Model<M, K, S>, K>
-        implements IRepository<S, M, K> {
+public abstract class Repository<S extends Repository<S, M, K>, M extends Model<M, K, S>, K> {
     private final String tableName;
     private final String primaryKeyName;
     private final List<String> columns;
@@ -60,6 +59,8 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
 
     protected abstract void populateColumns(PreparedStatement statement, int i, M model) throws SQLException;
 
+    protected abstract M get(ResultSet result) throws SQLException;
+
     public void cache(M model) {
         cache.put(model.getPrimaryKey(), model);
     }
@@ -69,7 +70,6 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
             cache(model);
     }
 
-    @Override
     public M get(K key) throws SQLException {
         M model = cache.get(key);
         if (model != null)
@@ -87,7 +87,6 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
         return model;
     }
 
-    @Override
     public M update(M model) throws SQLException {
         populateColumns(updateStatement, 1, model);
         populatePrimaryKey(updateStatement, columns.size() + 1, model.getPrimaryKey());
@@ -95,7 +94,6 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
         return model;
     }
 
-    @Override
     public M save(M model) throws SQLException {
         cache(model);
         populateColumns(saveStatement, 1, model);
@@ -103,14 +101,12 @@ public abstract class Repository<S extends IRepository<S, M, K>, M extends Model
         return model;
     }
 
-    @Override
     public boolean delete(K key) throws SQLException {
         cache.remove(key);
         populatePrimaryKey(deleteStatement, 1, key);
         return deleteStatement.execute();
     }
 
-    @Override
     public List<M> list() throws SQLException {
         List<M> models = new ArrayList<M>();
         ResultSet result = listStatement.executeQuery();

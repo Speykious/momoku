@@ -22,6 +22,7 @@ public final class UserRepository extends Repository<UserRepository, User, Strin
                 "creation_date"));
     }
 
+    @Override
     public User get(ResultSet result) throws SQLException {
         if (!result.next())
             return null;

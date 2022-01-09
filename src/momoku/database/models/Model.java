@@ -1,8 +1,8 @@
 package momoku.database.models;
 
-import momoku.database.repositories.IRepository;
+import momoku.database.repositories.Repository;
 
-public abstract class Model<S extends Model<S, K, R>, K, R extends IRepository<R, S, K>> {
+public abstract class Model<S extends Model<S, K, R>, K, R extends Repository<R, S, K>> {
     protected final K primaryKey;
     protected final R repository;
 

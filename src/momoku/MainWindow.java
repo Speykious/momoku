@@ -1,6 +1,7 @@
 package momoku;
 
 import momoku.components.CenteredWindow;
+import momoku.multiplayer.RoomSelectionScreen;
 import momoku.practiceMode.PracticeModeScreen;
 
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
 
         cards.put("mainMenu", new MainMenuScreen());
         cards.put("practiceMode", new PracticeModeScreen());
+        cards.put("multiplayer", new RoomSelectionScreen());
 
         cardPanel = new JPanel();
         cardLayout = new CardLayout();

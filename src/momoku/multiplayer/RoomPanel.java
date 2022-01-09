@@ -24,11 +24,11 @@ public class RoomPanel extends Screen implements ActionListener {
         super(screen);
         this.room = room;
 
-        FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 20, 20);
+        FlowLayout layout = new FlowLayout(FlowLayout.RIGHT, 20, 20);
         setLayout(layout);
         setAlignmentX(Component.CENTER_ALIGNMENT);
         setAlignmentY(Component.CENTER_ALIGNMENT);
-        setBorder(BorderFactory.createLineBorder(Color.getHSBColor(.5f, .2f, .5f), 1));
+        setBorder(BorderFactory.createLineBorder(Color.getHSBColor(.1f, .5f, .5f), 1));
 
         JLabel footerLabel = new JLabel(room.getTitle(), SwingConstants.CENTER);
         footerLabel.setFont(GlobalSettings.FOOTER_FONT);
@@ -48,5 +48,10 @@ public class RoomPanel extends Screen implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "joinRoom":
+                parentListener.actionPerformed(new ActionEvent(this, room.getId(), "room"));
+                break;
+        }
     }
 }

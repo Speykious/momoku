@@ -19,7 +19,7 @@ import momoku.components.Screen;
 import momoku.database.models.Room;
 
 public class RoomPanel extends Screen implements ActionListener {
-    private Room room;
+    private final Room room;
     private final JLabel footerLabel;
     private final JTextField roomPasswordField;
 
@@ -55,7 +55,7 @@ public class RoomPanel extends Screen implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "joinRoom":
-                parentListener.actionPerformed(new ActionEvent(this, room.getId(), "room"));
+                parentListener.actionPerformed(new ActionEvent(this, room.getId(), "joinRoom"));
                 break;
         }
     }
@@ -66,5 +66,13 @@ public class RoomPanel extends Screen implements ActionListener {
         roomPasswordField.setText("");
         if (room.getPass() == null)
             roomPasswordField.setEnabled(false);
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public String getEnteredPassword() {
+        return roomPasswordField.getText();
     }
 }

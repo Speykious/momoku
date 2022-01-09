@@ -2,11 +2,15 @@ package momoku;
 
 import momoku.components.CenteredWindow;
 import momoku.components.Screen;
+import momoku.database.models.Room;
+import momoku.multiplayer.RoomPanel;
+import momoku.multiplayer.RoomScreen;
 import momoku.multiplayer.RoomSelectionScreen;
 import momoku.practiceMode.PracticeModeScreen;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.awt.CardLayout;
@@ -19,6 +23,8 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
 
     private JPanel cardPanel;
     private CardLayout cardLayout;
+    private RoomScreen roomScreen;
+    private RoomSelectionScreen roomSelectionScreen;
 
     private HashMap<String, Screen> cards;
 
@@ -33,7 +39,10 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
 
         cards.put("mainMenu", new MainMenuScreen());
         cards.put("practiceMode", new PracticeModeScreen());
-        cards.put("multiplayer", new RoomSelectionScreen());
+        roomSelectionScreen = new RoomSelectionScreen();
+        roomScreen = new RoomScreen();
+        cards.put("multiplayer", roomSelectionScreen);
+        cards.put("room", roomScreen);
 
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
@@ -46,15 +55,31 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
         add(cardPanel);
     }
 
+    private void showScreen(String screenName) {
+        cards.get(screenName).reset();
+        cardLayout.show(cardPanel, screenName);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "exit":
                 System.exit(0);
                 break;
+            case "joinRoom":
+                RoomPanel roomPanel = (RoomPanel)e.getSource();
+                roomScreen.setRoom(roomPanel.getRoom());
+                showScreen("room");
+                break;
+            case "createRoom":
+                String roomName = roomSelectionScreen.getCreateRoomName();
+                Room createdRoom = new Room(727, roomName, null, null, false, 10,
+                    new Date(new java.util.Date().getTime()));
+                roomScreen.setRoom(createdRoom);
+                showScreen("room");
+                break;
             default:
-                cardLayout.show(cardPanel, e.getActionCommand());
-                cards.get(e.getActionCommand()).reset();
+                showScreen(e.getActionCommand());
                 break;
         }
     }

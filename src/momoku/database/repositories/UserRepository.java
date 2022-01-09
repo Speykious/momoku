@@ -12,14 +12,14 @@ public final class UserRepository extends Repository<UserRepository, User, Strin
 
     private UserRepository() {
         super("Users", "username", Arrays.asList(
-            "username",
-            "password",
-            "current_room",
-            "playing",
-            "ready",
-            "games_won",
-            "current_score",
-            "creation_date"));
+                "username",
+                "password",
+                "current_room",
+                "playing",
+                "ready",
+                "games_won",
+                "current_score",
+                "creation_date"));
     }
 
     public User get(ResultSet result) throws SQLException {

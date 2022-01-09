@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class Database {
     public static final Connection connection = connect();
-    
+
     private static Connection connect() {
         try {
             String password = Files.readString(Path.of("db/password.txt"), StandardCharsets.UTF_8);

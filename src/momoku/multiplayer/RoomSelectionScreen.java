@@ -89,7 +89,7 @@ public class RoomSelectionScreen extends Screen implements ActionListener {
         // NOTE: requires login page because room owner cannot be null
         for (int i = 0; i < 10; i++)
             roomsPanel.add(new RoomPanel(this,
-                    new Room(0, "lol", null, null, false, 10,
+                    new Room(i, "lol", null, null, false, 10,
                             new Date(new java.util.Date().getTime()))));
 
         JScrollPane roomsScrollPane = new JScrollPane(roomsPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,

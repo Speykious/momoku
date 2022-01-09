@@ -30,7 +30,9 @@ public class RoomPanel extends Screen implements ActionListener {
         setAlignmentY(Component.CENTER_ALIGNMENT);
         setBorder(BorderFactory.createLineBorder(Color.getHSBColor(.1f, .5f, .5f), 1));
 
-        JLabel footerLabel = new JLabel(room.getTitle(), SwingConstants.CENTER);
+        JLabel footerLabel = new JLabel(
+            "#" + room.getId() + " - " + room.getTitle(),
+            SwingConstants.CENTER);
         footerLabel.setFont(GlobalSettings.FOOTER_FONT);
         add(footerLabel);
 

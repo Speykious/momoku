@@ -105,7 +105,7 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         canvasPanel.add(canvas);
         add(canvasPanel, BorderLayout.CENTER);
 
-        nextImage();
+        reset();
     }
 
     public void nextImage() {
@@ -169,12 +169,16 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         switch (e.getActionCommand()) {
             case "back":
                 parentListener.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
-                state.reset();
-                nextImage();
                 break;
             case "guess":
                 guess();
                 break;
         }
+    }
+
+    @Override
+    public void reset() {
+        state.reset();
+        nextImage();
     }
 }

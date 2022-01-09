@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
 import momoku.GlobalSettings;
@@ -19,33 +20,35 @@ import momoku.database.models.Room;
 
 public class RoomPanel extends Screen implements ActionListener {
     private Room room;
+    private final JLabel footerLabel;
+    private final JTextField roomPasswordField;
 
     public RoomPanel(RoomSelectionScreen screen, Room room) {
         super(screen);
         this.room = room;
 
-        FlowLayout layout = new FlowLayout(FlowLayout.RIGHT, 20, 20);
+        FlowLayout layout = new FlowLayout(FlowLayout.RIGHT, 30, 20);
         setLayout(layout);
         setAlignmentX(Component.CENTER_ALIGNMENT);
         setAlignmentY(Component.CENTER_ALIGNMENT);
         setBorder(BorderFactory.createLineBorder(Color.getHSBColor(.1f, .5f, .5f), 1));
 
-        JLabel footerLabel = new JLabel(
-            "#" + room.getId() + " - " + room.getTitle(),
-            SwingConstants.CENTER);
+        footerLabel = new JLabel("", SwingConstants.CENTER);
         footerLabel.setFont(GlobalSettings.FOOTER_FONT);
         add(footerLabel);
 
-        JTextField roomNameTextField = new JTextField(16);
-        roomNameTextField.addActionListener(this);
-        roomNameTextField.setActionCommand("joinRoom");
-        add(roomNameTextField);
+        roomPasswordField = new JPasswordField(10);
+        roomPasswordField.addActionListener(this);
+        roomPasswordField.setActionCommand("joinRoom");
+        add(roomPasswordField);
 
         JButton createRoomButton = new JButton("Join");
         createRoomButton.setPreferredSize(new Dimension(120, 50));
         createRoomButton.setActionCommand("joinRoom");
         createRoomButton.addActionListener(this);
         add(createRoomButton);
+
+        reset();
     }
 
     @Override
@@ -55,5 +58,13 @@ public class RoomPanel extends Screen implements ActionListener {
                 parentListener.actionPerformed(new ActionEvent(this, room.getId(), "room"));
                 break;
         }
+    }
+
+    @Override
+    public void reset() {
+        footerLabel.setText("#" + room.getId() + " - " + room.getTitle());
+        roomPasswordField.setText("");
+        if (room.getPass() == null)
+            roomPasswordField.setEnabled(false);
     }
 }

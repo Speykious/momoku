@@ -27,8 +27,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 public class RoomSelectionScreen extends Screen implements ActionListener {
-    private JTextField roomNameTextField;
-    private JButton createRoomButton;
+    private final JTextField roomNameTextField;
+    private final JButton createRoomButton;
+    private final JPanel roomsPanel;
 
     public RoomSelectionScreen() {
         super();
@@ -78,22 +79,14 @@ public class RoomSelectionScreen extends Screen implements ActionListener {
 
         add(footerPanel, BorderLayout.SOUTH);
 
-        // Rooms scrollpane
-        JPanel roomsPanel = new JPanel();
+        roomsPanel = new JPanel();
         roomsPanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
         GridLayout roomsLayout = new GridLayout(0, 1);
         roomsLayout.setVgap(10);
         roomsPanel.setLayout(roomsLayout);
 
-        // TODO: replace with database room fetching logic
-        // NOTE: requires login page because room owner cannot be null
-        for (int i = 0; i < 10; i++)
-            roomsPanel.add(new RoomPanel(this,
-                    new Room(i, "lol", null, null, false, 10,
-                            new Date(new java.util.Date().getTime()))));
-
         JScrollPane roomsScrollPane = new JScrollPane(roomsPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         roomsScrollPane.setPreferredSize(new Dimension(800, 700));
         roomsScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         roomsScrollPane.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -107,6 +100,19 @@ public class RoomSelectionScreen extends Screen implements ActionListener {
             case "back":
                 parentListener.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
                 break;
+        }
+    }
+
+    @Override
+    public void reset() {
+        roomsPanel.removeAll();
+
+        // TODO: replace with database room fetching logic
+        // NOTE: requires login page because room owner cannot be null
+        for (int i = 0; i < 10; i++) {
+            Date date = new Date(new java.util.Date().getTime());
+            Room room = new Room(i, "Lol " + i + " lmao", null, null, false, 10, date);
+            roomsPanel.add(new RoomPanel(this, room));
         }
     }
 }

@@ -1,6 +1,7 @@
 package momoku;
 
 import momoku.components.CenteredWindow;
+import momoku.components.Screen;
 import momoku.multiplayer.RoomSelectionScreen;
 import momoku.practiceMode.PracticeModeScreen;
 
@@ -19,11 +20,11 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
     private JPanel cardPanel;
     private CardLayout cardLayout;
 
-    private HashMap<String, JPanel> cards;
+    private HashMap<String, Screen> cards;
 
     private MainWindow() {
         super(false);
-        cards = new HashMap<String, JPanel>();
+        cards = new HashMap<String, Screen>();
     }
 
     @Override
@@ -39,7 +40,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
         cardPanel.setLayout(cardLayout);
         cardPanel.setBorder(new EmptyBorder(50, 100, 50, 100));
 
-        for (Entry<String, JPanel> entry : cards.entrySet())
+        for (Entry<String, Screen> entry : cards.entrySet())
             cardPanel.add(entry.getValue(), entry.getKey());
 
         add(cardPanel);
@@ -53,6 +54,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
                 break;
             default:
                 cardLayout.show(cardPanel, e.getActionCommand());
+                cards.get(e.getActionCommand()).reset();
                 break;
         }
     }

@@ -2,20 +2,20 @@ package momoku.database.models;
 
 import momoku.database.repositories.IRepository;
 
-public abstract class Model<S extends Model<S, T, U>, T, U extends IRepository<U, S, T>> {
-    protected final T primaryKey;
-    protected final U repository;
+public abstract class Model<S extends Model<S, K, R>, K, R extends IRepository<R, S, K>> {
+    protected final K primaryKey;
+    protected final R repository;
 
-    protected Model(T primaryKey, U repository) {
+    protected Model(K primaryKey, R repository) {
         this.primaryKey = primaryKey;
         this.repository = repository;
     }
 
-    public U getRepository() {
+    public R getRepository() {
         return repository;
     }
 
-    public T getPrimaryKey() {
+    public K getPrimaryKey() {
         return primaryKey;
     }
 }

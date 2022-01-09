@@ -5,14 +5,14 @@ import java.util.List;
 
 import momoku.database.models.Model;
 
-public interface IRepository<S extends IRepository<S, T, U>, T extends Model<T, U, S>, U> {
-    public T get(U primaryKey) throws SQLException;
+public interface IRepository<S extends IRepository<S, M, K>, M extends Model<M, K, S>, K> {
+    public M get(K primaryKey) throws SQLException;
     
-    public T update(T model) throws SQLException;
+    public M update(M model) throws SQLException;
     
-    public T save(T model) throws SQLException;
+    public M save(M model) throws SQLException;
     
-    public boolean delete(U primaryKey) throws SQLException;
+    public boolean delete(K primaryKey) throws SQLException;
 
-    public List<T> list() throws SQLException;
+    public List<M> list() throws SQLException;
 }

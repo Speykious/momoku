@@ -27,7 +27,7 @@ public final class UserRepository implements IRepository<UserRepository, User, S
             updateStatement = c.prepareStatement(
                     "UPDATE Users SET username = ?, password = ?, current_room = ?, playing = ?, ready = ?, games_won = ?, current_score = ?, creation_date = ? WHERE username = ?");
             saveStatement = c.prepareStatement(
-                    "INSERT INTO (username, password, current_room, playing, ready, games_won, current_score, creation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    "INSERT INTO Users (username, password, current_room, playing, ready, games_won, current_score, creation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             deleteStatement = c.prepareStatement("DELETE FROM Users WHERE username = ?");
             listStatement = c.prepareStatement("SELECT * FROM Users");
         } catch (SQLException e) {
@@ -69,7 +69,7 @@ public final class UserRepository implements IRepository<UserRepository, User, S
         updateStatement.setInt(i++, user.getGamesWon());
         updateStatement.setInt(i++, user.getCurrentScore());
         updateStatement.setDate(i++, user.getCreationDate());
-        updateStatement.setString(i++, user.getUsername());
+        updateStatement.setString(i++, user.getUsername()); // WHERE [...]
         updateStatement.executeUpdate();
         return user;
     }

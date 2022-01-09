@@ -122,6 +122,7 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         try {
             Image imageData = ImageRepository.REPOSITORY.get(filename);
 
+            System.err.println("Showing: " + imageData.getWhoisthis());
             List<String> keywords = Arrays.asList(imageData.getWhoisthis().toLowerCase().split(" "));
             for (String guessKeyword : Arrays.asList(guess.toLowerCase().split(" "))) {
                 if (!keywords.contains(guessKeyword))
@@ -144,10 +145,7 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
 
-        System.err.println("Path: " + canvas.getImagePath());
         String filename = Path.of(canvas.getImagePath()).getFileName().toString();
-        System.err.println("Filename: " + filename);
-
         if (verifyImage(filename, guessTextField.getText())) {
             guessTextField.setText("correct!");
             state.addPoint();

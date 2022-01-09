@@ -1,46 +1,24 @@
 package momoku.database.repositories;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-import momoku.database.Database;
 import momoku.database.models.Room;
 
-public class RoomRepository implements IRepository<RoomRepository, Room, Integer> {
+public class RoomRepository extends Repository<RoomRepository, Room, Integer> {
     public static final RoomRepository REPOSITORY = new RoomRepository();
 
-    private PreparedStatement getStatement;
-    private PreparedStatement updateStatement;
-    private PreparedStatement saveStatement;
-    private PreparedStatement deleteStatement;
-    private PreparedStatement listStatement;
-
     private RoomRepository() {
-        Connection c = Database.connection;
-
-        try {
-            getStatement = c.prepareStatement("SELECT * FROM Rooms WHERE id = ? LIMIT 1");
-            updateStatement = c.prepareStatement(
-                    "UPDATE Rooms SET id = ?, title = ?, pass = ?, owner = ?, playing = ?, rounds = ?, creationDate = ? WHERE id = ?");
-            saveStatement = c.prepareStatement(
-                    "INSERT INTO Rooms (id, title, pass, owner, playing, rounds, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            deleteStatement = c.prepareStatement("DELETE FROM Rooms WHERE id = ?");
-            listStatement = c.prepareStatement("SELECT * FROM Rooms");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    @Override
-    public Room get(Integer id) throws SQLException {
-        getStatement.setInt(1, id);
-        ResultSet result = getStatement.executeQuery();
-        return get(result);
+        super("Rooms", "id", Arrays.asList(
+                "id",
+                "title",
+                "pass",
+                "owner",
+                "playing",
+                "rounds",
+                "creation_date"));
     }
 
     public Room get(ResultSet result) throws SQLException {
@@ -60,46 +38,18 @@ public class RoomRepository implements IRepository<RoomRepository, Room, Integer
     }
 
     @Override
-    public Room update(Room room) throws SQLException {
-        int i = 1;
-        updateStatement.setInt(i++, room.getId());
-        updateStatement.setString(i++, room.getTitle());
-        updateStatement.setString(i++, room.getPass());
-        updateStatement.setString(i++, room.getOwner().getUsername());
-        updateStatement.setBoolean(i++, room.isPlaying());
-        updateStatement.setInt(i++, room.getRounds());
-        updateStatement.setDate(i++, room.getCreationDate());
-        updateStatement.setInt(i++, room.getId()); // WHERE [...]
-        updateStatement.executeUpdate();
-        return room;
+    protected void populateColumns(PreparedStatement statement, int i, Room room) throws SQLException {
+        statement.setInt(i++, room.getId());
+        statement.setString(i++, room.getTitle());
+        statement.setString(i++, room.getPass());
+        statement.setString(i++, room.getOwner().getUsername());
+        statement.setBoolean(i++, room.isPlaying());
+        statement.setInt(i++, room.getRounds());
+        statement.setDate(i++, room.getCreationDate());
     }
 
     @Override
-    public Room save(Room room) throws SQLException {
-        int i = 1;
-        saveStatement.setInt(i++, room.getId());
-        saveStatement.setString(i++, room.getTitle());
-        saveStatement.setString(i++, room.getPass());
-        saveStatement.setString(i++, room.getOwner().getUsername());
-        saveStatement.setBoolean(i++, room.isPlaying());
-        saveStatement.setInt(i++, room.getRounds());
-        saveStatement.setDate(i++, room.getCreationDate());
-        saveStatement.executeUpdate();
-        return room;
-    }
-
-    @Override
-    public boolean delete(Integer id) throws SQLException {
-        deleteStatement.setInt(1, id);
-        return deleteStatement.execute();
-    }
-
-    @Override
-    public List<Room> list() throws SQLException {
-        List<Room> rooms = new ArrayList<Room>();
-        ResultSet result = listStatement.executeQuery();
-        for (Room room = get(result); room != null; room = get(result))
-            rooms.add(room);
-        return rooms;
+    protected void populatePrimaryKey(PreparedStatement statement, int i, Integer key) throws SQLException {
+        statement.setInt(i, key);
     }
 }

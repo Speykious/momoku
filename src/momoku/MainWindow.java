@@ -1,5 +1,6 @@
 package momoku;
 
+import momoku.accountInfo.UserRegistration;
 import momoku.components.CenteredWindow;
 import momoku.practiceMode.PracticeModeScreen;
 
@@ -31,6 +32,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
 
         cards.put("mainMenu", new MainMenuScreen());
         cards.put("practiceMode", new PracticeModeScreen());
+        cards.put("registerMode", new UserRegistration());
 
         cardPanel = new JPanel();
         cardLayout = new CardLayout();

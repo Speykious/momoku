@@ -59,6 +59,13 @@ public class MainMenuScreen extends Screen {
         exitButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         centerPanel.add(exitButton);
 
+        JButton registerButton = new JButton("Account Creation");
+        registerButton.setActionCommand("registerMode");
+        registerButton.addActionListener(parentListener);
+        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        registerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        centerPanel.add(registerButton);
+
         add(centerPanel, BorderLayout.CENTER);
     }
 }

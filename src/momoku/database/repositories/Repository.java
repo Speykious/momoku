@@ -19,13 +19,13 @@ public abstract class Repository<M extends Model<K>, K> {
     private final List<String> columns;
     private final HashMap<K, M> cache;
 
-    private PreparedStatement getStatement;
-    private PreparedStatement searchStatement;
-    private PreparedStatement updateStatement;
-    private PreparedStatement saveStatement;
-    private PreparedStatement deleteStatement;
-    private PreparedStatement listStatement;
-    private PreparedStatement getRandomStatement;
+    private volatile PreparedStatement getStatement;
+    private volatile PreparedStatement searchStatement;
+    private volatile PreparedStatement updateStatement;
+    private volatile PreparedStatement saveStatement;
+    private volatile PreparedStatement deleteStatement;
+    private volatile PreparedStatement listStatement;
+    private volatile PreparedStatement getRandomStatement;
 
     protected Repository(String tableName, String primaryKeyName, List<String> columns) {
         this.tableName = tableName;
@@ -66,7 +66,7 @@ public abstract class Repository<M extends Model<K>, K> {
 
     protected abstract M get(ResultSet result) throws SQLException;
 
-    public void cache(M model) {
+    public synchronized void cache(M model) {
         if (model == null)
             return;
 
@@ -84,7 +84,7 @@ public abstract class Repository<M extends Model<K>, K> {
         return model;
     }
 
-    private List<M> getModels(PreparedStatement statement) throws SQLException {
+    private synchronized List<M> getModels(PreparedStatement statement) throws SQLException {
         List<M> models = new ArrayList<M>();
         ResultSet result = statement.executeQuery();
         while (result.next())
@@ -107,36 +107,36 @@ public abstract class Repository<M extends Model<K>, K> {
         return model;
     }
 
-    public List<M> search(String column, Object value) throws SQLException {
+    public synchronized List<M> search(String column, Object value) throws SQLException {
         searchStatement.setString(1, column);
         searchStatement.setObject(2, value);
         return getModels(searchStatement);
     }
 
-    public boolean update(M model) throws SQLException {
+    public synchronized boolean update(M model) throws SQLException {
         cache(model);
         populateColumns(updateStatement, 1, model);
         populatePrimaryKey(updateStatement, columns.size() + 1, model.getPrimaryKey());
         return updateStatement.execute();
     }
 
-    public boolean save(M model) throws SQLException {
+    public synchronized boolean save(M model) throws SQLException {
         cache(model);
         populateColumns(saveStatement, 1, model);
         return saveStatement.execute();
     }
 
-    public boolean delete(K key) throws SQLException {
+    public synchronized boolean delete(K key) throws SQLException {
         cache.remove(key);
         populatePrimaryKey(deleteStatement, 1, key);
         return deleteStatement.execute();
     }
 
-    public List<M> list() throws SQLException {
+    public synchronized List<M> list() throws SQLException {
         return getModels(listStatement);
     }
 
-    public M getRandom() throws SQLException {
+    public synchronized M getRandom() throws SQLException {
         getRandomStatement.setInt(1, 1);
         ResultSet result = getRandomStatement.executeQuery();
         if (!result.next())
@@ -144,7 +144,7 @@ public abstract class Repository<M extends Model<K>, K> {
         return getCached(result);
     }
 
-    public List<M> getRandoms(int count) throws SQLException {
+    public synchronized List<M> getRandoms(int count) throws SQLException {
         getRandomStatement.setInt(1, count);
         return getModels(getRandomStatement);
     }

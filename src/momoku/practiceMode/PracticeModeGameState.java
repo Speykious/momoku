@@ -30,10 +30,10 @@ public class PracticeModeGameState {
     public Image updateImage() {
         try {
             List<Image> images = ImageRepository.REPOSITORY.getRandoms(2);
-            if (image != images.get(0))
-                image = images.get(0);
-            else
+            if (image.equals(images.get(0)))
                 image = images.get(1);
+            else
+                image = images.get(0);
             return image;
         } catch (SQLException e) {
             e.printStackTrace();

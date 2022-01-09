@@ -24,6 +24,7 @@ public abstract class Repository<M extends Model<K>, K> {
     private PreparedStatement saveStatement;
     private PreparedStatement deleteStatement;
     private PreparedStatement listStatement;
+    private PreparedStatement getRandomStatement;
 
     protected Repository(String tableName, String primaryKeyName, List<String> columns) {
         this.tableName = tableName;
@@ -51,6 +52,7 @@ public abstract class Repository<M extends Model<K>, K> {
                     "INSERT INTO " + tableName + " (" + columnsInto + ") VALUES (" + columnsValues + ")");
             deleteStatement = c.prepareStatement("DELETE FROM " + tableName + " WHERE id = ?");
             listStatement = c.prepareStatement("SELECT * FROM " + tableName);
+            getRandomStatement = c.prepareStatement("SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT ?");
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(1);
@@ -123,6 +125,16 @@ public abstract class Repository<M extends Model<K>, K> {
 
     public List<M> list() throws SQLException {
         return getModels(listStatement);
+    }
+
+    public M getRandom() throws SQLException {
+        getRandomStatement.setInt(1, 1);
+        return get(getRandomStatement.executeQuery());
+    }
+
+    public List<M> getRandoms(int count) throws SQLException {
+        getRandomStatement.setInt(1, count);
+        return getModels(getRandomStatement);
     }
 
     public String getTableName() {

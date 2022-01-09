@@ -88,6 +88,7 @@ public class RoomSelectionScreen extends Screen implements ActionListener {
 
         JScrollPane roomsScrollPane = new JScrollPane(roomsPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        roomsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         roomsScrollPane.setPreferredSize(new Dimension(800, 700));
         roomsScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         roomsScrollPane.setAlignmentY(Component.CENTER_ALIGNMENT);

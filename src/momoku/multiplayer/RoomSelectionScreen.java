@@ -79,6 +79,7 @@ public class RoomSelectionScreen extends Screen implements ActionListener {
 
         add(footerPanel, BorderLayout.SOUTH);
 
+        // Scrollpane
         roomsPanel = new JPanel();
         roomsPanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
         GridLayout roomsLayout = new GridLayout(0, 1);
@@ -94,11 +95,19 @@ public class RoomSelectionScreen extends Screen implements ActionListener {
         add(roomsScrollPane, BorderLayout.CENTER);
     }
 
+    public String getCreateRoomName() {
+        return roomNameTextField.getText();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "back":
                 parentListener.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
+                break;
+            case "createRoom":
+            case "joinRoom":
+                parentListener.actionPerformed(e);
                 break;
         }
     }

@@ -19,4 +19,17 @@ public class Main {
         // creating and showing this application's GUI.
         SwingUtilities.invokeLater(new MainWindow(true));
     }
+        /**
+     * Launch the application.
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    UserRegistration frame = new UserRegistration();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    */
 }

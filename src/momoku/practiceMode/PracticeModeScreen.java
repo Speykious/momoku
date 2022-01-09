@@ -3,6 +3,8 @@ package momoku.practiceMode;
 import momoku.GlobalSettings;
 import momoku.components.ImageCanvas;
 import momoku.components.Screen;
+import momoku.database.models.Image;
+import momoku.database.repositories.ImageRepository;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,6 +13,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
@@ -109,17 +115,41 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         canvas.repaint();
     }
 
+    private boolean verifyImage(String filename, String guess) {
+        try {
+            Image imageData = ImageRepository.REPOSITORY.get(filename);
+
+            List<String> keywords = Arrays.asList(imageData.getWhoisthis().toLowerCase().split(" "));
+            for (String guessKeyword : Arrays.asList(guess.toLowerCase().split(" "))) {
+                if (!keywords.contains(guessKeyword))
+                    return false;
+            }
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            return false;
+        }
+    }
+
     private void guess() {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
 
-        // TODO: remove random boolean with actual guessing system (requires a
-        // database).
-        if (GlobalSettings.RANDOM.nextBoolean()) {
-            guessTextField.setText("nope");
-        } else {
+        System.err.println("Path: " + canvas.getImagePath());
+        String filename = Path.of(canvas.getImagePath()).getFileName().toString();
+        System.err.println("Filename: " + filename);
+
+        if (verifyImage(filename, guessTextField.getText())) {
             guessTextField.setText("correct!");
             state.addPoint();
+        } else {
+            guessTextField.setText("nope");
         }
 
         GlobalSettings.TIMER.schedule(new TimerTask() {

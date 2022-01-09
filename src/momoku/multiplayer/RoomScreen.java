@@ -14,9 +14,13 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,6 +34,11 @@ public class RoomScreen extends Screen implements ActionListener {
     private final JPanel usersPanel;
     private Room room;
     private JLabel header;
+    private int readyUsers = 0;
+    private JLabel readyLabel;
+
+    private ConfigPanel passConfigPanel;
+    private ConfigPanel roundsConfigPanel;
 
     public RoomScreen() {
         super();
@@ -62,9 +71,9 @@ public class RoomScreen extends Screen implements ActionListener {
         FlowLayout footerLayout = new FlowLayout(FlowLayout.CENTER, 40, 10);
         footerPanel.setLayout(footerLayout);
 
-        JLabel footerLabel = new JLabel("(X / N Ready)", SwingConstants.CENTER);
-        footerLabel.setFont(GlobalSettings.FOOTER_FONT);
-        footerPanel.add(footerLabel);
+        readyLabel = new JLabel("", SwingConstants.CENTER);
+        readyLabel.setFont(GlobalSettings.FOOTER_FONT);
+        footerPanel.add(readyLabel);
 
         readyButton = new JButton("Ready");
         readyButton.setPreferredSize(new Dimension(250, 50));
@@ -90,13 +99,42 @@ public class RoomScreen extends Screen implements ActionListener {
         JScrollPane usersScrollPane = new JScrollPane(usersPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        usersScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         usersScrollPane.setPreferredSize(new Dimension(300, 700));
         usersScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         usersScrollPane.setAlignmentY(Component.CENTER_ALIGNMENT);
         usersScrollPane.setBorder(BorderFactory.createLineBorder(Color.getHSBColor(0f, 0f, .5f), 1));
         add(usersScrollPane, BorderLayout.WEST);
 
+        // Configuration grid
+        JPanel configPanel = new JPanel();
+        configPanel.setBorder(new EmptyBorder(new Insets(50, 50, 50, 50)));
+        GridLayout configLayout = new GridLayout(0, 1);
+        configLayout.setVgap(10);
+        configPanel.setLayout(configLayout);
+
+        passConfigPanel = new ConfigPanel(this, "Pass");
+        configPanel.add(passConfigPanel);
+
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+        DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
+        decimalFormat.setGroupingUsed(false);
+        JTextField roundsTextField = new JFormattedTextField(decimalFormat);
+        roundsConfigPanel = new ConfigPanel(this, "Rounds", roundsTextField);
+        configPanel.add(roundsConfigPanel);
+
+        add(configPanel);
+
         reset();
+    }
+
+    public int getReadyUsers() {
+        return readyUsers;
+    }
+
+    public void setReadyUsers(int ready) {
+        readyUsers = ready;
+        readyLabel.setText("(" + ready + " / N Ready)");
     }
 
     public Room getRoom() {
@@ -105,11 +143,23 @@ public class RoomScreen extends Screen implements ActionListener {
 
     public void setRoom(Room room) {
         this.room = room;
+        reset();
+    }
+
+    public String getPass() {
+        return passConfigPanel.getText();
+    }
+
+    public int getRounds() {
+        return (Integer)(roundsConfigPanel.getValue());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
+            case "updatePass":
+            case "updateRounds":
+                break;
             case "back":
                 parentListener.actionPerformed(new ActionEvent(this, 727, "multiplayer"));
                 break;

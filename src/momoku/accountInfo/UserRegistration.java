@@ -27,7 +27,8 @@ public class UserRegistration extends Screen implements ActionListener {
     private JTextField email;
     private JTextField username;
     private JPasswordField passwordField;
-    private JButton btnNewButton;
+    private JButton registerButton;
+    private JButton loginButton;
 
     public UserRegistration() {
         GridLayout gl = new GridLayout(8, 1);
@@ -74,13 +75,21 @@ public class UserRegistration extends Screen implements ActionListener {
         passwordField.setBounds(100, 20, 165, 25);
         contentPane.add(passwordField);
 
-        btnNewButton = new JButton("Register");
-        btnNewButton.setActionCommand("Register");
-        btnNewButton.addActionListener(this);
+        registerButton = new JButton("Register");
+        registerButton.setActionCommand("register");
+        registerButton.addActionListener(this);
 
-        btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
-        btnNewButton.setBounds(399, 447, 259, 74);
-        contentPane.add(btnNewButton);
+        registerButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
+        registerButton.setBounds(399, 447, 259, 74);
+        contentPane.add(registerButton);
+
+        loginButton = new JButton("Déjà un compte ? Cliquez ici :)");
+        loginButton.setActionCommand("login");
+        loginButton.addActionListener(this);
+
+        loginButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
+        loginButton.setBounds(399, 447, 259, 74);
+        contentPane.add(loginButton);
 
         contentPane.setLayout(gl);
 
@@ -90,7 +99,7 @@ public class UserRegistration extends Screen implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
-            case "Register":
+            case "register":
                 String emailId = email.getText();
                 String userName = username.getText();
                 String password = new String(passwordField.getPassword());
@@ -98,23 +107,27 @@ public class UserRegistration extends Screen implements ActionListener {
                 msg += " \n";
 
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/swing_demo", "root", "root");
+                    Connection connection = DriverManager.getConnection(url, "root", "root")
 
-                    String query = "INSERT INTO account values('" + userName + "','" +
-                        password + "','" + emailId + "')";
+                    String query = "INSERT INTO `MomokuDB`.`Users`('" + userName + "','" +
+                        password + "')";
 
                     Statement sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
                     if (x == 0) {
-                        JOptionPane.showMessageDialog(btnNewButton, "This account alredy exists");
+                        JOptionPane.showMessageDialog(registerButton, "This account alredy exists");
                     } else {
-                        JOptionPane.showMessageDialog(btnNewButton,
+                        JOptionPane.showMessageDialog(registerButton,
                             "Welcome, " + msg + "Your account has been sucessfully created");
                     }
                     connection.close();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
+                break;
+            
+            case "login":
+                //link to login page
                 break;
             }
         

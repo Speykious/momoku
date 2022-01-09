@@ -44,16 +44,7 @@ public class UserRegistration extends Screen implements ActionListener {
         lblNewUserRegister.setBounds(10, 20, 80, 25);
         contentPane.add(lblNewUserRegister);
 
-        JLabel lblEmailAddress = new JLabel("Email\r\n address");
-        lblEmailAddress.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblEmailAddress.setBounds(10, 20, 80, 25);
-        contentPane.add(lblEmailAddress);
-
-        email = new JTextField();
-        email.setFont(new Font("Tahoma", Font.PLAIN, 32));
-        email.setBounds(100, 20, 165, 25);
-        contentPane.add(email);
-        email.setColumns(10);
+        //Vérifier que le username n'a pas deja été utilisé
 
         JLabel lblUsername = new JLabel("Username");
         lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 20));

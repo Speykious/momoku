@@ -50,7 +50,7 @@ public final class UserRepository implements IRepository<UserRepository, User, S
         return new User(
                 result.getString("username"),
                 result.getString("password"),
-                result.getInt("current_room"),
+                RoomRepository.REPOSITORY.get(result.getInt("current_room")),
                 result.getBoolean("playing"),
                 result.getBoolean("ready"),
                 result.getInt("games_won"),
@@ -63,7 +63,7 @@ public final class UserRepository implements IRepository<UserRepository, User, S
         int i = 1;
         updateStatement.setString(i++, user.getUsername());
         updateStatement.setString(i++, user.getPassword());
-        updateStatement.setInt(i++, user.getCurrentRoom());
+        updateStatement.setInt(i++, user.getCurrentRoom().getId());
         updateStatement.setBoolean(i++, user.isPlaying());
         updateStatement.setBoolean(i++, user.isReady());
         updateStatement.setInt(i++, user.getGamesWon());
@@ -79,7 +79,7 @@ public final class UserRepository implements IRepository<UserRepository, User, S
         int i = 1;
         saveStatement.setString(i++, user.getUsername());
         saveStatement.setString(i++, user.getPassword());
-        saveStatement.setInt(i++, user.getCurrentRoom());
+        saveStatement.setInt(i++, user.getCurrentRoom().getId());
         saveStatement.setBoolean(i++, user.isPlaying());
         saveStatement.setBoolean(i++, user.isReady());
         saveStatement.setInt(i++, user.getGamesWon());

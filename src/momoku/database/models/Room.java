@@ -7,20 +7,19 @@ import momoku.database.repositories.RoomRepository;
 public final class Room extends Model<Room, Integer, RoomRepository> {
     private String title;
     private String pass;
-    private int owner;
+    private User owner;
     private boolean playing;
     private int rounds;
     private Date creationDate;
 
     public Room(
-        int id,
-        String title,
-        String pass,
-        int owner,
-        boolean playing,
-        int rounds,
-        Date creationDate
-    ) {
+            int id,
+            String title,
+            String pass,
+            User owner,
+            boolean playing,
+            int rounds,
+            Date creationDate) {
         super(id, RoomRepository.REPOSITORY);
         this.title = title;
         this.pass = pass;
@@ -50,11 +49,11 @@ public final class Room extends Model<Room, Integer, RoomRepository> {
         this.pass = pass;
     }
 
-    public int getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 

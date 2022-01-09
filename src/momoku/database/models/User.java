@@ -6,7 +6,7 @@ import momoku.database.repositories.UserRepository;
 
 public class User extends Model<User, String, UserRepository> {
     private String password;
-    private int currentRoom;
+    private Room currentRoom;
     private boolean playing;
     private boolean ready;
     private int gamesWon;
@@ -14,15 +14,14 @@ public class User extends Model<User, String, UserRepository> {
     private Date creationDate;
 
     public User(
-        String username,
-        String password,
-        int currentRoom,
-        boolean playing,
-        boolean ready,
-        int gamesWon,
-        int currentScore,
-        Date creationDate
-    ) {
+            String username,
+            String password,
+            Room currentRoom,
+            boolean playing,
+            boolean ready,
+            int gamesWon,
+            int currentScore,
+            Date creationDate) {
         super(username, UserRepository.REPOSITORY);
         this.password = password;
         this.currentRoom = currentRoom;
@@ -45,11 +44,11 @@ public class User extends Model<User, String, UserRepository> {
         this.password = password;
     }
 
-    public int getCurrentRoom() {
+    public Room getCurrentRoom() {
         return currentRoom;
     }
 
-    public void setCurrentRoom(int currentRoom) {
+    public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
 

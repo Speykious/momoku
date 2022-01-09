@@ -47,11 +47,13 @@ public class RoomRepository implements IRepository<RoomRepository, Room, Integer
         if (!result.next())
             return null;
 
+        String ownerUsername = result.getString("owner");
+
         return new Room(
                 result.getInt("id"),
                 result.getString("title"),
                 result.getString("pass"),
-                result.getInt("owner"),
+                UserRepository.REPOSITORY.get(ownerUsername),
                 result.getBoolean("playing"),
                 result.getInt("rounds"),
                 result.getDate("creation_date"));
@@ -63,7 +65,7 @@ public class RoomRepository implements IRepository<RoomRepository, Room, Integer
         updateStatement.setInt(i++, room.getId());
         updateStatement.setString(i++, room.getTitle());
         updateStatement.setString(i++, room.getPass());
-        updateStatement.setInt(i++, room.getOwner());
+        updateStatement.setString(i++, room.getOwner().getUsername());
         updateStatement.setBoolean(i++, room.isPlaying());
         updateStatement.setInt(i++, room.getRounds());
         updateStatement.setDate(i++, room.getCreationDate());
@@ -78,7 +80,7 @@ public class RoomRepository implements IRepository<RoomRepository, Room, Integer
         saveStatement.setInt(i++, room.getId());
         saveStatement.setString(i++, room.getTitle());
         saveStatement.setString(i++, room.getPass());
-        saveStatement.setInt(i++, room.getOwner());
+        saveStatement.setString(i++, room.getOwner().getUsername());
         saveStatement.setBoolean(i++, room.isPlaying());
         saveStatement.setInt(i++, room.getRounds());
         saveStatement.setDate(i++, room.getCreationDate());

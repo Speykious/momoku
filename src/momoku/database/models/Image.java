@@ -1,14 +1,12 @@
 package momoku.database.models;
 
-import momoku.database.repositories.ImageRepository;
-
-public class Image extends Model<Image, String, ImageRepository> {
+public class Image extends Model<String> {
     private String whoisthis;
 
     public Image(
             String filename,
             String whoisthis) {
-        super(filename, ImageRepository.REPOSITORY);
+        super(filename);
         this.whoisthis = whoisthis;
     }
 

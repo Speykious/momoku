@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import momoku.database.models.User;
 
-public final class UserRepository extends Repository<UserRepository, User, String> {
+public final class UserRepository extends Repository<User, String> {
     public static final UserRepository REPOSITORY = new UserRepository();
 
     private UserRepository() {

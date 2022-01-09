@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import momoku.database.models.Room;
 
-public final class RoomRepository extends Repository<RoomRepository, Room, Integer> {
+public final class RoomRepository extends Repository<Room, Integer> {
     public static final RoomRepository REPOSITORY = new RoomRepository();
 
     private RoomRepository() {

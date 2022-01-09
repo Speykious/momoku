@@ -12,7 +12,7 @@ import java.util.List;
 import momoku.database.Database;
 import momoku.database.models.Model;
 
-public abstract class Repository<S extends Repository<S, M, K>, M extends Model<M, K, S>, K> {
+public abstract class Repository<M extends Model<K>, K> {
     private final String tableName;
     private final String primaryKeyName;
     private final List<String> columns;

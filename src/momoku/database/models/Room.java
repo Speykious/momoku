@@ -2,9 +2,7 @@ package momoku.database.models;
 
 import java.sql.Date;
 
-import momoku.database.repositories.RoomRepository;
-
-public final class Room extends Model<Room, Integer, RoomRepository> {
+public final class Room extends Model<Integer> {
     private String title;
     private String pass;
     private User owner;
@@ -20,7 +18,7 @@ public final class Room extends Model<Room, Integer, RoomRepository> {
             boolean playing,
             int rounds,
             Date creationDate) {
-        super(id, RoomRepository.REPOSITORY);
+        super(id);
         this.title = title;
         this.pass = pass;
         this.owner = owner;

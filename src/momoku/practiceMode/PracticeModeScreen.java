@@ -4,7 +4,7 @@ import momoku.GlobalSettings;
 import momoku.components.ImageCanvas;
 import momoku.components.Screen;
 import momoku.database.models.Image;
-import momoku.database.repositories.ImageRepository;
+import momoku.sockets.MomokuClient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,8 +13,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimerTask;
@@ -106,7 +106,6 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         reset();
     }
 
-
     public void updateImage(Image image) {
         this.image = image;
 
@@ -114,20 +113,15 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         guessPointsLabel.setText(points + " pts");
 
         canvas.setImagePath(Path.of(
-            GlobalSettings.IMAGE_DIRECTORY.getAbsolutePath(),
-            image.getFilename()).toString());
+                GlobalSettings.IMAGE_DIRECTORY.getAbsolutePath(),
+                image.getFilename()).toString());
         canvas.repaint();
     }
 
     public void updateImage() {
         try {
-            // TODO: replace by Client Socket method
-            List<Image> images = ImageRepository.REPOSITORY.getRandoms(2);
-            if (image == null || !image.equals(images.get(0)))
-                image = images.get(0);
-            else
-                image = images.get(1);
-        } catch (SQLException e) {
+            image = MomokuClient.INSTANCE.getRandomImage(image);
+        } catch (IOException e) {
             e.printStackTrace();
             image = null;
         }
@@ -135,27 +129,15 @@ public class PracticeModeScreen extends Screen implements ActionListener {
     }
 
     private boolean verifyImage(String filename, String guess) {
-        try {
-            // TODO: replace by Client Socket method
-            Image imageData = ImageRepository.REPOSITORY.get(filename);
-
-            System.err.println("Showing: " + imageData.getWhoisthis());
-            List<String> keywords = Arrays.asList(imageData.getWhoisthis().toLowerCase().split(" "));
-            for (String guessKeyword : Arrays.asList(guess.toLowerCase().split(" "))) {
-                if (!keywords.contains(guessKeyword))
-                    return false;
-            }
-
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            return false;
+        System.err.println("Showing: " + image.getWhoisthis());
+        List<String> keywords = Arrays.asList(image.getWhoisthis().toLowerCase().split(" "));
+        for (String guessKeyword : Arrays.asList(guess.toLowerCase().split(" "))) {
+            if (!keywords.contains(guessKeyword))
+                return false;
         }
+
+        return true;
+
     }
 
     protected void guess() {

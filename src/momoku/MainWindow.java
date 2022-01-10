@@ -75,9 +75,16 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
                 System.exit(0);
                 break;
             case "joinRoom":
-                RoomPanel roomPanel = (RoomPanel)e.getSource();
-                roomScreen.setRoom(roomPanel.getRoom());
-                showScreen("room");
+                RoomPanel roomPanel = (RoomPanel) e.getSource();
+                try {
+                    if (MomokuClient.INSTANCE.joinRoom(roomPanel.getRoom(), roomPanel.getEnteredPassword())) {
+                        roomScreen.setRoom(roomPanel.getRoom());
+                        showScreen("room");
+                    }
+                } catch (IOException e2) {
+                    e2.printStackTrace();
+                }
+                
                 break;
             case "createRoom":
                 try {

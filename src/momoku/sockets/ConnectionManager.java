@@ -27,6 +27,7 @@ public class ConnectionManager extends Thread {
 		while (clientSocket.isConnected()) {
 			try {
 				String command = receiver.readUTF();
+				System.out.println("Command received: " + command);
 				executeCommand(command);
 			} catch (EOFException e) {
 				System.err.println("FATAL: client ended connection unexpectedly");
@@ -52,13 +53,16 @@ public class ConnectionManager extends Thread {
 	}
 
 	private void connect() throws IOException, SQLException {
+		System.out.println("Connecting a user");
         String username = receiver.readUTF();
         String password = receiver.readUTF();
 
 		User user = UserRepository.REPOSITORY.get(username);
 		if (user == null || user.getPassword() != password) {
+			System.out.println("Invalid credentials");
 			sender.writeBoolean(false);
 		} else {
+			System.out.println("User " + username + " connected successfully");
 			sender.writeBoolean(true);
 			sendUserInfo(user);
 		}
@@ -67,12 +71,15 @@ public class ConnectionManager extends Thread {
 	}
 
 	private void register() throws IOException, SQLException {
+		System.out.println("Registering a user");
         String username = receiver.readUTF();
         String password = receiver.readUTF();
 
 		if (UserRepository.REPOSITORY.get(username) != null) {
+			System.out.println("User " + username + " already exists");
 			sender.writeBoolean(false);
 		} else {
+			System.out.println("Registered new user " + username);
 			User user = new User(username, password);
 			UserRepository.REPOSITORY.save(user);
 			sendUserInfo(user);

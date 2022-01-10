@@ -134,7 +134,7 @@ public class LoginScreen extends Screen implements ActionListener {
                 messageLabel.setText("Username or password missing!");
                 return;
             }
-            User user = MomokuClient.INSTANCE.connect(getUsername(), getPassword());
+            User user = MomokuClient.INSTANCE.connect(username, password);
             if (user == null) {
                 messageLabel.setText("Credentials incorrect!");
                 return;

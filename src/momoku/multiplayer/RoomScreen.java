@@ -4,6 +4,7 @@ import momoku.GlobalSettings;
 import momoku.components.BackButton;
 import momoku.components.Screen;
 import momoku.database.models.Room;
+import momoku.sockets.MomokuClient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,6 +15,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -162,7 +164,12 @@ public class RoomScreen extends Screen implements ActionListener {
                 room.setRounds(getRounds());
                 break;
             case "back":
-                parentListener.actionPerformed(new ActionEvent(this, 727, "multiplayer"));
+                try {
+                    MomokuClient.INSTANCE.leaveRoom();
+                    parentListener.actionPerformed(new ActionEvent(this, 727, "multiplayer"));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 break;
         }
     }

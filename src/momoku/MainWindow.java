@@ -81,11 +81,14 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
                 showScreen("room");
                 break;
             case "createRoom":
-                String roomName = roomSelectionScreen.getCreateRoomName();
-                Room createdRoom = new Room(727, roomName, null, null, false, 10,
-                    new Date(new java.util.Date().getTime()));
-                roomScreen.setRoom(createdRoom);
-                showScreen("room");
+                try {
+                    String roomName = roomSelectionScreen.getCreateRoomName();
+                    Room createdRoom = MomokuClient.INSTANCE.createRoom(roomName);
+                    roomScreen.setRoom(createdRoom);
+                    showScreen("room");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 break;
             default:
                 showScreen(e.getActionCommand());

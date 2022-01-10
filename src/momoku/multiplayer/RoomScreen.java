@@ -156,7 +156,10 @@ public class RoomScreen extends Screen implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "updatePass":
+                room.setPass(getPass());
+                break;
             case "updateRounds":
+                room.setRounds(getRounds());
                 break;
             case "back":
                 parentListener.actionPerformed(new ActionEvent(this, 727, "multiplayer"));

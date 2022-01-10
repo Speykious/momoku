@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import momoku.database.models.Image;
+import momoku.database.models.Room;
 import momoku.database.models.User;
 import momoku.database.repositories.ImageRepository;
+import momoku.database.repositories.RoomRepository;
 import momoku.database.repositories.UserRepository;
 
 public class ConnectionManager extends Thread {
@@ -51,6 +53,7 @@ public class ConnectionManager extends Thread {
 			case "connect" -> connect();
 			case "register" -> register();
 			case "getRandomImage" -> getRandomImage();
+			case "createRoom" -> createRoom();
 			default -> System.err.println("Command '" + command + "' does not exist");
 		}
 	}
@@ -108,6 +111,22 @@ public class ConnectionManager extends Thread {
 		System.out.println("Sending " + image.getFilename());
 		sender.writeUTF(image.getFilename());
 		sender.writeUTF(image.getWhoisthis());
+
+		sender.flush();
+	}
+
+	private void createRoom() throws IOException, SQLException {
+		String title = receiver.readUTF();
+		String ownerName = receiver.readUTF();
+		
+		User owner = UserRepository.REPOSITORY.get(ownerName);
+		int roomCount = RoomRepository.REPOSITORY.count();
+		Room room = new Room(roomCount + 1, title, owner);
+		RoomRepository.REPOSITORY.save(room);
+
+		sender.writeInt(room.getId());
+		sender.writeInt(room.getRounds());
+		sender.writeLong(room.getCreationDate().getTime());
 
 		sender.flush();
 	}

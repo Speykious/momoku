@@ -27,6 +27,15 @@ public final class Room extends Model<Integer> {
         this.creationDate = creationDate;
     }
 
+    public Room(int id, String title, User owner) {
+        super(id);
+        this.title = title;
+        this.owner = owner;
+        playing = false;
+        rounds = 10;
+        creationDate = new Date(new java.util.Date().getTime());
+    }
+
     public int getId() {
         return primaryKey;
     }

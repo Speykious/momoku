@@ -4,6 +4,7 @@ import momoku.GlobalSettings;
 import momoku.components.BackButton;
 import momoku.components.Screen;
 import momoku.database.models.Room;
+import momoku.sockets.MomokuClient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,8 +15,9 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -117,12 +119,12 @@ public class RoomSelectionScreen extends Screen implements ActionListener {
     public void reset() {
         roomsPanel.removeAll();
 
-        // TODO: replace with database room fetching logic
-        // NOTE: requires login page because room owner cannot be null
-        for (int i = 0; i < 10; i++) {
-            Date date = new Date(new java.util.Date().getTime());
-            Room room = new Room(i, "Lol " + i + " lmao", null, null, false, 10, date);
-            roomsPanel.add(new RoomPanel(this, room));
+        try {
+            List<Room> rooms = MomokuClient.INSTANCE.getRooms();
+            for (Room room : rooms)
+                roomsPanel.add(new RoomPanel(this, room));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

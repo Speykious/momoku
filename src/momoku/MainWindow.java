@@ -2,9 +2,11 @@ package momoku;
 
 import momoku.components.CenteredWindow;
 import momoku.practiceMode.PracticeModeScreen;
+import momoku.sockets.MomokuClient;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.awt.CardLayout;
@@ -49,6 +51,11 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "exit":
+                try {
+                    MomokuClient.INSTANCE.closeConnection();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 System.exit(0);
                 break;
             default:

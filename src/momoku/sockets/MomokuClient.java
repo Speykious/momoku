@@ -13,21 +13,32 @@ public class MomokuClient {
 
     private Socket socket;
     private DataInputStream receiver;
-	private DataOutputStream sender;
+    private DataOutputStream sender;
     private User connectedUser;
 
     private MomokuClient() {
-        try {
-            int port = 3000;
-            System.out.println("Connecting on port " + port + "...");
-            socket = new Socket("localhost", port);
-            System.out.println("Success!");
-            receiver = new DataInputStream(socket.getInputStream());
-            sender = new DataOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+
+    }
+
+    public void connectToServer() throws IOException {
+        if (socket != null)
+            return;
+
+        int port = 3000;
+        System.out.println("Connecting on port " + port + "...");
+        socket = new Socket("localhost", port);
+        System.out.println("Success!");
+        receiver = new DataInputStream(socket.getInputStream());
+        sender = new DataOutputStream(socket.getOutputStream());
+    }
+
+    public void closeConnection() throws IOException {
+        if (socket == null)
+            return;
+
+        receiver.close();
+        sender.close();
+        socket.close();
     }
 
     public User getConnectedUser() {
@@ -45,19 +56,19 @@ public class MomokuClient {
 
         if (!receiver.readBoolean())
             return null;
-        
+
         return new User(
-            username,
-            password,
-            receiver.readInt(),
-            new Date(receiver.readLong()));
+                username,
+                password,
+                receiver.readInt(),
+                new Date(receiver.readLong()));
     }
-    
+
     public User connect(String username, String password) throws IOException {
         sender.writeUTF("connect");
         return getUser(username, password);
     }
-    
+
     public User register(String username, String password) throws IOException {
         sender.writeUTF("register");
         return getUser(username, password);

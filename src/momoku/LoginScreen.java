@@ -149,9 +149,17 @@ public class LoginScreen extends Screen implements ActionListener {
 
     private void register() {
         try {
-            User user = MomokuClient.INSTANCE.register(getUsername(), getPassword());
-            if (user == null)
+            String username = getUsername();
+            String password = getPassword();
+            if (username.length() == 0 || password.length() == 0) {
+                messageLabel.setText("Username or password missing!");
+                return;
+            }
+            User user = MomokuClient.INSTANCE.register(username, password);
+            if (user == null) {
                 messageLabel.setText("User already exists!");
+                return;
+            }
 
             MomokuClient.INSTANCE.setConnectedUser(user);
             parentListener.actionPerformed(new ActionEvent(this, 727, "mainMenu"));

@@ -14,4 +14,6 @@ public abstract class Screen extends JPanel {
     protected Screen() {
         parentListener = momoku.MainWindow.WINDOW;
     }
+
+    public abstract void reset();
 }

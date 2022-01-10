@@ -2,9 +2,7 @@ package momoku.database.models;
 
 import java.sql.Date;
 
-import momoku.database.repositories.UserRepository;
-
-public class User extends Model<User, String, UserRepository> {
+public class User extends Model<String> {
     private String password;
     private Room currentRoom;
     private boolean playing;
@@ -22,7 +20,7 @@ public class User extends Model<User, String, UserRepository> {
             int gamesWon,
             int currentScore,
             Date creationDate) {
-        super(username, UserRepository.REPOSITORY);
+        super(username);
         this.password = password;
         this.currentRoom = currentRoom;
         this.playing = playing;
@@ -81,8 +79,8 @@ public class User extends Model<User, String, UserRepository> {
         return gamesWon;
     }
 
-    public void setGamesWon(int gamesWon) {
-        this.gamesWon = gamesWon;
+    public void winAGame() {
+        gamesWon++;
     }
 
     public int getCurrentScore() {

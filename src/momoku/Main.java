@@ -10,6 +10,8 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import momoku.sockets.MomokuClient;
 
 public class Main {
+    public static User currentUser = null;
+
     public static void main(String[] args) {
         // Setup modern look and feel
         try {

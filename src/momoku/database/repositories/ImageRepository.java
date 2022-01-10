@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import momoku.database.models.Image;
 
-public class ImageRepository extends Repository<ImageRepository, Image, String> {
+public final class ImageRepository extends Repository<Image, String> {
     public static final ImageRepository REPOSITORY = new ImageRepository();
 
     private ImageRepository() {

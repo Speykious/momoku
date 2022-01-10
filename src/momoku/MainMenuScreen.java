@@ -60,4 +60,9 @@ public class MainMenuScreen extends Screen {
 
         add(centerPanel, BorderLayout.CENTER);
     }
+
+    @Override
+    public void reset() {
+        
+    }
 }

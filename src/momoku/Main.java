@@ -5,7 +5,11 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
+import momoku.database.models.User;
+
 public class Main {
+    public static User currentUser = null;
+
     public static void main(String[] args) {
         // Setup modern look and feel
         try {

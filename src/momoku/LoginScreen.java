@@ -1,6 +1,8 @@
 package momoku;
 
 import momoku.components.Screen;
+import momoku.database.models.User;
+import momoku.sockets.MomokuClient;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,6 +12,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -45,12 +48,6 @@ public class LoginScreen extends Screen implements ActionListener {
         JPanel headerPanel = new JPanel();
         FlowLayout headerLayout = new FlowLayout(FlowLayout.CENTER, 100, 0);
         headerPanel.setLayout(headerLayout);
-
-        JButton backButton = new JButton("Go Back");
-        backButton.setPreferredSize(new Dimension(120, 50));
-        backButton.setActionCommand("back");
-        backButton.addActionListener(this);
-        headerPanel.add(backButton);
 
         JLabel header = new JLabel("Log in / Sign in", SwingConstants.CENTER);
         header.setFont(GlobalSettings.HEADER_FONT);
@@ -121,18 +118,54 @@ public class LoginScreen extends Screen implements ActionListener {
         add(footerPanel, BorderLayout.SOUTH);
     }
 
+    private String getUsername() {
+        return usernameField.getText();
+    }
+
+    private String getPassword() {
+        return String.valueOf(passwordField.getPassword());
+    }
+
+    private void login() {
+        try {
+            String username = getUsername();
+            String password = getPassword();
+            if (username.length() == 0 || password.length() == 0) {
+                messageLabel.setText("Username or password missing!");
+                return;
+            }
+            User user = MomokuClient.INSTANCE.connect(getUsername(), getPassword());
+            if (user == null) {
+                messageLabel.setText("Credentials incorrect!");
+                return;
+            }
+
+            MomokuClient.INSTANCE.setConnectedUser(user);
+            parentListener.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void register() {
+        try {
+            User user = MomokuClient.INSTANCE.register(getUsername(), getPassword());
+            if (user == null)
+                messageLabel.setText("User already exists!");
+
+            MomokuClient.INSTANCE.setConnectedUser(user);
+            parentListener.actionPerformed(new ActionEvent(this, 727, "mainMenu"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
-            case "clearMessage":
-                messageLabel.setText(" ");
-                break;
-            case "login":
-                messageLabel.setText("Will login shortly");
-                break;
-            case "register":
-                messageLabel.setText("Will register shortly");
-                break;
+            case "clearMessage" -> messageLabel.setText(" ");
+            case "login" -> login();
+            case "register" -> register();
         }
     }
 }

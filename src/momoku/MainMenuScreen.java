@@ -33,7 +33,7 @@ public class MainMenuScreen extends Screen {
         // Center
         JPanel centerPanel = new JPanel();
         GridLayout centerLayout = new GridLayout(0, 1);
-        centerLayout.setVgap(60);
+        centerLayout.setVgap(80);
         centerPanel.setLayout(centerLayout);
         centerPanel.setBorder(new EmptyBorder(50, 150, 100, 150));
 
@@ -50,13 +50,6 @@ public class MainMenuScreen extends Screen {
         multiplayerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         multiplayerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         centerPanel.add(multiplayerButton);
-
-        JButton registerButton = new JButton("Log in / Sign in");
-        registerButton.setActionCommand("login");
-        registerButton.addActionListener(parentListener);
-        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        registerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
-        centerPanel.add(registerButton);
 
         JButton exitButton = new JButton("Exit");
         exitButton.setActionCommand("exit");

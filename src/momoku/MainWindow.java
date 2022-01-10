@@ -1,6 +1,5 @@
 package momoku;
 
-import momoku.accountInfo.LoginPage;
 import momoku.components.CenteredWindow;
 import momoku.practiceMode.PracticeModeScreen;
 
@@ -30,9 +29,9 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
     public void init() {
         setTitle("Mōmoku");
 
+        cards.put("login", new LoginScreen());
         cards.put("mainMenu", new MainMenuScreen());
         cards.put("practiceMode", new PracticeModeScreen());
-        cards.put("login", new LoginPage());
 
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
@@ -43,6 +42,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
             cardPanel.add(entry.getValue(), entry.getKey());
 
         add(cardPanel);
+        cardLayout.show(cardPanel, "login");
     }
 
     @Override

@@ -6,8 +6,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Server {
-	public static final Server INSTANCE = new Server();
+public class MomokuServer {
+	public static final MomokuServer INSTANCE = new MomokuServer();
 	private ServerSocket serverSocket;
 	List<ConnectionManager> connections = new ArrayList<ConnectionManager>();
 
@@ -15,7 +15,7 @@ public class Server {
 		INSTANCE.listen();
 	}
 
-	private Server() {
+	private MomokuServer() {
 		try {
 			int port = 3000;
 			System.out.println("Connecting to port " + port + "...");

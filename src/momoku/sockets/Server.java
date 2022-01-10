@@ -1,34 +1,34 @@
 package momoku.sockets;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService; 
-import java.util.concurrent.Executors;
-import java.util.Timer;
 
-public class Server implements Runnable {
-    private final List<SocketManager> sockets;
-    private final ExecutorService pool;
-    private final Map<SocketManager, User> activeUsers;
-    private final Map<String, Integer> questions;
-    private final Map<String, Timer> timers;
+public class Server {
 
-    final int POINTS = 10;
-    final int SECONDSTIMEOUT = 45;
+	ServerSocket ss;
+	ArrayList<MultiServerManager> ListeConnexions =new ArrayList<MultiServerManager>();
+	
+	public static void main(String[] args) {
+		new Server();
 
-    public Server() {
-        this.sockets = new ArrayList<SocketManager>();
-        this.activeUsers = new HashMap<SocketManager, User>();
-        this.pool = Executors.newCachedThreadPool();
-        this.questions = new HashMap<String, Integer>();
-        this.timers = new HashMap<String, Timer>();
-    }
-
-    @Override
-    public void run() {
-        // TODO Auto-generated method stub
-        
-    }
+	}
+	public Server() {
+		try {
+			ss = new ServerSocket(3000); //Connexion au port 3000
+			while(true)
+			{
+				Socket socket = ss.accept(); //Connexions au port acceptées
+				MultiServerManager connexion = new MultiServerManager(socket, this);
+				connexion.start(); //Thread
+				ListeConnexions.add(connexion);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//make sure its bloody same with client it took my 15 min to realize that XD
+	}
 }

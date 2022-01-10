@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.Date;
 
+import momoku.database.models.Image;
 import momoku.database.models.User;
 
 public class MomokuClient {
@@ -76,4 +77,13 @@ public class MomokuClient {
         sender.writeUTF("register");
         return getUser(username, password);
     }
+
+	public Image getRandomImage(Image previousImage) throws IOException {
+        sender.writeUTF("getRandomImage");
+        sender.writeUTF(previousImage.getFilename());
+
+		String filename = receiver.readUTF();
+        String whoisthis = receiver.readUTF();
+        return new Image(filename, whoisthis);
+	}
 }

@@ -6,8 +6,11 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.List;
 
+import momoku.database.models.Image;
 import momoku.database.models.User;
+import momoku.database.repositories.ImageRepository;
 import momoku.database.repositories.UserRepository;
 
 public class ConnectionManager extends Thread {
@@ -34,8 +37,7 @@ public class ConnectionManager extends Thread {
 			} catch (EOFException e) {
 				System.err.println("FATAL: client ended connection unexpectedly");
 				break;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -48,19 +50,20 @@ public class ConnectionManager extends Thread {
 		switch (command) {
 			case "connect" -> connect();
 			case "register" -> register();
+			case "getRandomImage" -> getRandomImage();
 			default -> System.err.println("Command '" + command + "' does not exist");
 		}
 	}
 
-	private void sendUserInfo(User user) throws IOException {
+    private void sendUserInfo(User user) throws IOException {
 		sender.writeInt(user.getGamesWon());
 		sender.writeLong(user.getCreationDate().getTime());
 	}
 
 	private void connect() throws IOException, SQLException {
 		System.out.println("Connecting a user");
-        String username = receiver.readUTF();
-        String password = receiver.readUTF();
+		String username = receiver.readUTF();
+		String password = receiver.readUTF();
 
 		User user = UserRepository.REPOSITORY.get(username);
 		if (user == null || !user.getPassword().equals(password)) {
@@ -77,8 +80,8 @@ public class ConnectionManager extends Thread {
 
 	private void register() throws IOException, SQLException {
 		System.out.println("Registering a user");
-        String username = receiver.readUTF();
-        String password = receiver.readUTF();
+		String username = receiver.readUTF();
+		String password = receiver.readUTF();
 
 		if (UserRepository.REPOSITORY.get(username) != null) {
 			System.out.println("User " + username + " already exists");
@@ -89,6 +92,21 @@ public class ConnectionManager extends Thread {
 			UserRepository.REPOSITORY.save(user);
 			sendUserInfo(user);
 		}
+
+		sender.flush();
+	}
+
+	private void getRandomImage() throws IOException, SQLException {
+		String filename = receiver.readUTF();
+		Image image;
+		List<Image> images = ImageRepository.REPOSITORY.getRandoms(2);
+		if (!filename.equals(images.get(0).getFilename()))
+			image = images.get(0);
+		else
+			image = images.get(1);
+		
+		sender.writeUTF(image.getFilename());
+		sender.writeUTF(image.getWhoisthis());
 
 		sender.flush();
 	}

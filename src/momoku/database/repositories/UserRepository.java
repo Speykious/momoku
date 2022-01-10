@@ -43,15 +43,18 @@ public final class UserRepository extends Repository<User, String> {
 
     @Override
     public User get(ResultSet result) throws SQLException {
-        return new User(
+        User user = new User(
                 result.getString("username"),
                 result.getString("password"),
-                RoomRepository.REPOSITORY.get(result.getInt("current_room")),
+                null,
                 result.getBoolean("playing"),
                 result.getBoolean("ready"),
                 result.getInt("games_won"),
                 result.getInt("current_score"),
                 result.getDate("creation_date"));
+        cache(user);
+        user.setCurrentRoom(RoomRepository.REPOSITORY.get(result.getInt("current_room")));
+        return user;
     }
 
     @Override

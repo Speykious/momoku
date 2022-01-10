@@ -14,16 +14,28 @@ public class MomokuClient {
     private Socket socket;
     private DataInputStream receiver;
 	private DataOutputStream sender;
+    private User connectedUser;
 
     private MomokuClient() {
         try {
-            socket = new Socket("localhost", 3000);
+            int port = 3000;
+            System.out.println("Connecting on port " + port + "...");
+            socket = new Socket("localhost", port);
+            System.out.println("Success!");
             receiver = new DataInputStream(socket.getInputStream());
             sender = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public User getConnectedUser() {
+        return connectedUser;
+    }
+
+    public void setConnectedUser(User user) {
+        connectedUser = user;
     }
 
     private User getUser(String username, String password) throws IOException {

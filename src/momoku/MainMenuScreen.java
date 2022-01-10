@@ -32,10 +32,9 @@ public class MainMenuScreen extends Screen {
 
         // Center
         JPanel centerPanel = new JPanel();
-        GridLayout flowLayout = new GridLayout(3, 1);
-        flowLayout.setHgap(80);
-        flowLayout.setVgap(80);
-        centerPanel.setLayout(flowLayout);
+        GridLayout centerLayout = new GridLayout(0, 1);
+        centerLayout.setVgap(60);
+        centerPanel.setLayout(centerLayout);
         centerPanel.setBorder(new EmptyBorder(50, 150, 100, 150));
 
         JButton practiceModeButton = new JButton("Practice Mode");
@@ -52,19 +51,19 @@ public class MainMenuScreen extends Screen {
         multiplayerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         centerPanel.add(multiplayerButton);
 
+        JButton registerButton = new JButton("Log in / Sign in");
+        registerButton.setActionCommand("login");
+        registerButton.addActionListener(parentListener);
+        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        registerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        centerPanel.add(registerButton);
+
         JButton exitButton = new JButton("Exit");
         exitButton.setActionCommand("exit");
         exitButton.addActionListener(parentListener);
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         exitButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         centerPanel.add(exitButton);
-
-        JButton registerButton = new JButton("Account Creation");
-        registerButton.setActionCommand("registerMode");
-        registerButton.addActionListener(parentListener);
-        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        registerButton.setAlignmentY(Component.CENTER_ALIGNMENT);
-        centerPanel.add(registerButton);
 
         add(centerPanel, BorderLayout.CENTER);
     }

@@ -4,6 +4,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
+
+import momoku.database.models.User;
+import momoku.database.repositories.UserRepository;
 
 public class ConnectionManager extends Thread {
 	private final Socket clientSocket;
@@ -23,15 +27,52 @@ public class ConnectionManager extends Thread {
 			try {
 				String command = receiver.readUTF();
 				executeCommand(command);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	private void executeCommand(String command) {
+	private void executeCommand(String command) throws IOException, SQLException {
 		switch (command) {
+			case "connect" -> connect();
+			case "register" -> register();
 			default -> System.err.println("Command '" + command + "' does not exist");
 		}
+	}
+
+	private void sendUserInfo(User user) throws IOException {
+		sender.writeInt(user.getGamesWon());
+		sender.writeLong(user.getCreationDate().getTime());
+	}
+
+	private void connect() throws IOException, SQLException {
+        String username = receiver.readUTF();
+        String password = receiver.readUTF();
+
+		User user = UserRepository.REPOSITORY.get(username);
+		if (user == null || user.getPassword() != password) {
+			sender.writeBoolean(false);
+		} else {
+			sender.writeBoolean(true);
+			sendUserInfo(user);
+		}
+
+		sender.flush();
+	}
+
+	private void register() throws IOException, SQLException {
+        String username = receiver.readUTF();
+        String password = receiver.readUTF();
+
+		if (UserRepository.REPOSITORY.get(username) != null) {
+			sender.writeBoolean(false);
+		} else {
+			User user = new User(username, password);
+			UserRepository.REPOSITORY.save(user);
+			sendUserInfo(user);
+		}
+
+		sender.flush();
 	}
 }

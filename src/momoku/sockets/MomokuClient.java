@@ -145,6 +145,15 @@ public class MomokuClient {
         return Arrays.asList(rooms);
     }
 
+    public boolean joinRoom(Room room, String pass) throws IOException {
+        sender.writeUTF("joinRoom");
+        sender.writeInt(room.getId());
+        sender.writeUTF(pass);
+        sender.flush();
+
+        return receiver.readBoolean();
+    }
+
     public void leaveRoom() throws IOException {
         sender.writeUTF("leaveRoom");
         sender.flush();

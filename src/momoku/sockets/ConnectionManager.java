@@ -56,6 +56,7 @@ public class ConnectionManager extends Thread {
 			case "getRandomImage" -> getRandomImage();
 			case "createRoom" -> createRoom();
 			case "getRooms" -> getRooms();
+			case "joinRoom" -> joinRoom();
 			case "leaveRoom" -> leaveRoom();
 			default -> System.err.println("Command '" + command + "' does not exist");
 		}
@@ -157,6 +158,22 @@ public class ConnectionManager extends Thread {
 			sender.writeInt(room.getRounds());
 			sender.writeLong(room.getCreationDate().getTime());
 		}
+	}
+
+	private void joinRoom() throws IOException, SQLException {
+		int roomId = receiver.readInt();
+		String pass = receiver.readUTF();
+
+		Room room = RoomRepository.REPOSITORY.get(roomId);
+		if (room.getPass() != null && !room.getPass().equals(pass)) {
+			sender.writeBoolean(false);
+		} else {
+			connectedUser.setCurrentRoom(room);
+			UserRepository.REPOSITORY.update(connectedUser);
+			sender.writeBoolean(true);
+		}
+
+		sender.flush();
 	}
 
 	private void leaveRoom() throws IOException, SQLException {

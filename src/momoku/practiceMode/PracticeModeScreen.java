@@ -102,8 +102,6 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         canvas = new ImageCanvas();
         canvasPanel.add(canvas);
         add(canvasPanel, BorderLayout.CENTER);
-
-        reset();
     }
 
     public void updateImage(Image image) {

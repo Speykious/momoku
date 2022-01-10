@@ -124,8 +124,6 @@ public class RoomScreen extends Screen implements ActionListener {
         configPanel.add(roundsConfigPanel);
 
         add(configPanel);
-
-        reset();
     }
 
     public int getReadyUsers() {

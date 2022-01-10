@@ -158,4 +158,17 @@ public class ConnectionManager extends Thread {
 			sender.writeLong(room.getCreationDate().getTime());
 		}
 	}
+
+	private void leaveRoom() throws IOException, SQLException {
+		Room room = connectedUser.getCurrentRoom();
+		connectedUser.setCurrentRoom(null);
+		UserRepository.REPOSITORY.update(connectedUser);
+		
+		List<User> usersInRoom = UserRepository.REPOSITORY.getUsersInRoom(room);
+		if (usersInRoom.isEmpty()) {
+			RoomRepository.REPOSITORY.delete(room);
+		} else {
+			room.setOwner(usersInRoom.get(0));
+		}
+	}
 }

@@ -144,4 +144,9 @@ public class MomokuClient {
 
         return Arrays.asList(rooms);
     }
+
+    public void leaveRoom() throws IOException {
+        sender.writeUTF("leaveRoom");
+        sender.flush();
+    }
 }

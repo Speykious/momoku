@@ -1,16 +1,20 @@
 package momoku.database.repositories;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
+import java.util.List;
 
+import momoku.database.Database;
 import momoku.database.models.Room;
 import momoku.database.models.User;
 
 public final class UserRepository extends Repository<User, String> {
     public static final UserRepository REPOSITORY = new UserRepository();
+    private volatile PreparedStatement roomStatement;
 
     private UserRepository() {
         super("Users", "username", Arrays.asList(
@@ -22,6 +26,19 @@ public final class UserRepository extends Repository<User, String> {
                 "games_won",
                 "current_score",
                 "creation_date"));
+
+        Connection c = Database.connection;
+        try {
+            roomStatement = c.prepareStatement("SELECT * FROM Users WHERE current_room = ?");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public List<User> getUsersInRoom(Room room) throws SQLException {
+        roomStatement.setInt(1, room.getId());
+        return getModels(roomStatement);
     }
 
     @Override

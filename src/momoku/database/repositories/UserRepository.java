@@ -3,8 +3,10 @@ package momoku.database.repositories;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Arrays;
 
+import momoku.database.models.Room;
 import momoku.database.models.User;
 
 public final class UserRepository extends Repository<User, String> {
@@ -37,9 +39,13 @@ public final class UserRepository extends Repository<User, String> {
 
     @Override
     protected void populateColumns(PreparedStatement statement, int i, User user) throws SQLException {
+        Room room = user.getCurrentRoom();
         statement.setString(i++, user.getUsername());
         statement.setString(i++, user.getPassword());
-        statement.setInt(i++, user.getCurrentRoom().getId());
+        if (room == null)
+            statement.setNull(i++, Types.INTEGER);
+        else
+            statement.setInt(i++, room.getId());
         statement.setBoolean(i++, user.isPlaying());
         statement.setBoolean(i++, user.isReady());
         statement.setInt(i++, user.getGamesWon());

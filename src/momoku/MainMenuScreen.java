@@ -32,10 +32,9 @@ public class MainMenuScreen extends Screen {
 
         // Center
         JPanel centerPanel = new JPanel();
-        GridLayout flowLayout = new GridLayout(3, 1);
-        flowLayout.setHgap(80);
-        flowLayout.setVgap(80);
-        centerPanel.setLayout(flowLayout);
+        GridLayout centerLayout = new GridLayout(0, 1);
+        centerLayout.setVgap(80);
+        centerPanel.setLayout(centerLayout);
         centerPanel.setBorder(new EmptyBorder(50, 150, 100, 150));
 
         JButton practiceModeButton = new JButton("Practice Mode");

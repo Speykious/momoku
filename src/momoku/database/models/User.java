@@ -30,6 +30,15 @@ public class User extends Model<String> {
         this.creationDate = creationDate;
     }
 
+    public User(String username, String password, int gamesWon, Date creationDate) {
+        this(username, password, null, false, false, gamesWon, 0, creationDate);
+    }
+
+    public User(String username, String password) {
+        this(username, password, 0,
+                new Date(new java.util.Date().getTime()));
+    }
+
     public String getUsername() {
         return primaryKey;
     }

@@ -7,10 +7,11 @@ import momoku.multiplayer.RoomPanel;
 import momoku.multiplayer.RoomScreen;
 import momoku.multiplayer.RoomSelectionScreen;
 import momoku.practiceMode.PracticeModeScreen;
+import momoku.sockets.MomokuClient;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.awt.CardLayout;
@@ -37,6 +38,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
     public void init() {
         setTitle("Mōmoku");
 
+        cards.put("login", new LoginScreen());
         cards.put("mainMenu", new MainMenuScreen());
         cards.put("practiceMode", new PracticeModeScreen());
         roomSelectionScreen = new RoomSelectionScreen();
@@ -53,6 +55,7 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
             cardPanel.add(entry.getValue(), entry.getKey());
 
         add(cardPanel);
+        cardLayout.show(cardPanel, "login");
     }
 
     private void showScreen(String screenName) {
@@ -64,6 +67,11 @@ public final class MainWindow extends CenteredWindow implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "exit":
+                try {
+                    MomokuClient.INSTANCE.closeConnection();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 System.exit(0);
                 break;
             case "joinRoom":

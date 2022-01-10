@@ -60,7 +60,6 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         backButton.setPreferredSize(new Dimension(120, 50));
         backButton.setActionCommand("back");
         backButton.addActionListener(this);
-
         headerPanel.add(backButton);
 
         JLabel header = new JLabel("Practice Mode", SwingConstants.CENTER);

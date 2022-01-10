@@ -2,6 +2,7 @@ package momoku.sockets;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
@@ -27,7 +28,11 @@ public class ConnectionManager extends Thread {
 			try {
 				String command = receiver.readUTF();
 				executeCommand(command);
-			} catch (Exception e) {
+			} catch (EOFException e) {
+				System.err.println("FATAL: client ended connection unexpectedly");
+				break;
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

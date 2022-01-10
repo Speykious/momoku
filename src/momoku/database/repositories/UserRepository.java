@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+import momoku.database.models.Room;
 import momoku.database.models.User;
 
 public final class UserRepository extends Repository<UserRepository, User, String> {
@@ -37,9 +38,10 @@ public final class UserRepository extends Repository<UserRepository, User, Strin
 
     @Override
     protected void populateColumns(PreparedStatement statement, int i, User user) throws SQLException {
+        Room room = user.getCurrentRoom();
         statement.setString(i++, user.getUsername());
         statement.setString(i++, user.getPassword());
-        statement.setInt(i++, user.getCurrentRoom().getId());
+        statement.setInt(i++, room == null ? 0 : room.getId());
         statement.setBoolean(i++, user.isPlaying());
         statement.setBoolean(i++, user.isReady());
         statement.setInt(i++, user.getGamesWon());

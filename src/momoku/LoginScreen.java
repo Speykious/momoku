@@ -1,11 +1,12 @@
-package momoku.accountInfo;
+package momoku;
 
-import momoku.GlobalSettings;
 import momoku.components.Screen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,12 +24,12 @@ import javax.swing.border.EmptyBorder;
 
 import javax.swing.JPasswordField;
 
-public class LoginPage extends Screen implements ActionListener {
+public class LoginScreen extends Screen implements ActionListener {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JLabel messageLabel;
 
-    public LoginPage() {
+    public LoginScreen() {
         super();
 
         // Main layout
@@ -41,9 +42,21 @@ public class LoginPage extends Screen implements ActionListener {
         setLayout(mainLayout);
 
         // Header
+        JPanel headerPanel = new JPanel();
+        FlowLayout headerLayout = new FlowLayout(FlowLayout.CENTER, 100, 0);
+        headerPanel.setLayout(headerLayout);
+
+        JButton backButton = new JButton("Go Back");
+        backButton.setPreferredSize(new Dimension(120, 50));
+        backButton.setActionCommand("back");
+        backButton.addActionListener(this);
+        headerPanel.add(backButton);
+
         JLabel header = new JLabel("Log in / Sign in", SwingConstants.CENTER);
         header.setFont(GlobalSettings.HEADER_FONT);
-        add(header, BorderLayout.NORTH);
+        headerPanel.add(header);
+
+        add(headerPanel, BorderLayout.NORTH);
 
         // Center
         JPanel formPanel = new JPanel();
@@ -89,9 +102,23 @@ public class LoginPage extends Screen implements ActionListener {
 
         add(formPanel, BorderLayout.CENTER);
 
+        // Footer
+        JPanel footerPanel = new JPanel();
+        FlowLayout footerLayout = new FlowLayout(FlowLayout.CENTER, 100, 0);
+        footerPanel.setLayout(footerLayout);
+
+        JButton exitButton = new JButton("Exit");
+        exitButton.setActionCommand("exit");
+        exitButton.addActionListener(parentListener);
+        exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        exitButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        footerPanel.add(exitButton);
+
         messageLabel = new JLabel(" ", SwingConstants.CENTER);
         messageLabel.setForeground(Color.getHSBColor(0f, .7f, .8f));
-        add(messageLabel, BorderLayout.SOUTH);
+        footerPanel.add(messageLabel);
+        
+        add(footerPanel, BorderLayout.SOUTH);
     }
 
     @Override

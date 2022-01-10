@@ -18,9 +18,10 @@ import momoku.GlobalSettings;
 import momoku.components.Screen;
 
 public class ConfigPanel extends Screen implements ActionListener {
-    private JTextField textField;
     private String title;
     private Object lastSetting;
+    private JTextField textField;
+    private JButton updateButton;
 
     public ConfigPanel(ActionListener parent, String title, JTextField textField) {
         super(parent);
@@ -43,11 +44,11 @@ public class ConfigPanel extends Screen implements ActionListener {
         textField.setActionCommand("update");
         add(textField);
 
-        JButton updateRoundsButton = new JButton("Update");
-        updateRoundsButton.setPreferredSize(new Dimension(150, 50));
-        updateRoundsButton.setActionCommand("update");
-        updateRoundsButton.addActionListener(this);
-        add(updateRoundsButton);
+        updateButton = new JButton("Update");
+        updateButton.setPreferredSize(new Dimension(150, 50));
+        updateButton.setActionCommand("update");
+        updateButton.addActionListener(this);
+        add(updateButton);
     }
 
     public ConfigPanel(ActionListener parent, String title) {
@@ -58,8 +59,28 @@ public class ConfigPanel extends Screen implements ActionListener {
         return (String)lastSetting;
     }
 
+    public void setText(String text) {
+        textField.setText(text);
+        lastSetting = text;
+    }
+
     public Object getValue() {
         return lastSetting;
+    }
+
+    public boolean setValue(Object value) {
+        if (textField instanceof JFormattedTextField formattedTextField) {
+            formattedTextField.setValue(value);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean value) {
+        textField.setEnabled(value);
+        updateButton.setEnabled(value);
     }
 
     @Override

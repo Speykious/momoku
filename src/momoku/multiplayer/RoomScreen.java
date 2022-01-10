@@ -4,6 +4,7 @@ import momoku.GlobalSettings;
 import momoku.components.BackButton;
 import momoku.components.Screen;
 import momoku.database.models.Room;
+import momoku.database.models.User;
 import momoku.sockets.MomokuClient;
 
 import java.awt.BorderLayout;
@@ -180,5 +181,12 @@ public class RoomScreen extends Screen implements ActionListener {
             return;
 
         header.setText(room.getTitle());
+        passConfigPanel.setText(room.getPass());
+        roundsConfigPanel.setValue(room.getRounds());
+
+        User connectedUser = MomokuClient.INSTANCE.getConnectedUser();
+        boolean enableConfigEdit = room.getOwner().equals(connectedUser);
+        passConfigPanel.setEnabled(enableConfigEdit);
+        roundsConfigPanel.setEnabled(enableConfigEdit);
     }
 }

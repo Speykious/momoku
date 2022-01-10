@@ -36,11 +36,12 @@ public class MomokuClient {
         if (socket == null)
             return;
 
-        receiver.close();
         sender.writeUTF("end");
         sender.flush();
         sender.close();
+        receiver.close();
         socket.close();
+        socket = null;
     }
 
     public User getConnectedUser() {

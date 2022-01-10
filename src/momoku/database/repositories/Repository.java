@@ -49,10 +49,11 @@ public abstract class Repository<M extends Model<K>, K> {
             getStatement = c.prepareStatement(
                     "SELECT * FROM " + tableName + " WHERE " + primaryKeyName + " = ? LIMIT 1");
             searchStatement = c.prepareStatement("SELECT * FROM " + tableName + " WHERE ? = ?");
-            updateStatement = c.prepareStatement("UPDATE " + tableName + " SET " + columnsSet + " WHERE id = ?");
+            updateStatement = c.prepareStatement(
+                    "UPDATE " + tableName + " SET " + columnsSet + " WHERE " + primaryKeyName + " = ?");
             saveStatement = c.prepareStatement(
                     "INSERT INTO " + tableName + " (" + columnsInto + ") VALUES (" + columnsValues + ")");
-            deleteStatement = c.prepareStatement("DELETE FROM " + tableName + " WHERE id = ?");
+            deleteStatement = c.prepareStatement("DELETE FROM " + tableName + " WHERE " + primaryKeyName + " = ?");
             listStatement = c.prepareStatement("SELECT * FROM " + tableName);
             countStatement = c.prepareStatement("SELECT COUNT(*) AS count FROM " + tableName);
             getRandomStatement = c.prepareStatement("SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT ?");

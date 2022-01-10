@@ -9,7 +9,7 @@ import java.util.List;
 public class MomokuServer {
 	public static final MomokuServer INSTANCE = new MomokuServer();
 	private ServerSocket serverSocket;
-	List<ConnectionManager> connections = new ArrayList<ConnectionManager>();
+	private List<ConnectionManager> connections = new ArrayList<ConnectionManager>();
 
 	public static void main(String[] args) {
 		INSTANCE.listen();
@@ -39,5 +39,9 @@ public class MomokuServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean endConnection(ConnectionManager connection) {
+		return connections.remove(connection);
 	}
 }

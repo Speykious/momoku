@@ -28,6 +28,8 @@ public class ConnectionManager extends Thread {
 			try {
 				String command = receiver.readUTF();
 				System.out.println("Command received: " + command);
+				if (command == "end")
+					break;
 				executeCommand(command);
 			} catch (EOFException e) {
 				System.err.println("FATAL: client ended connection unexpectedly");
@@ -37,6 +39,9 @@ public class ConnectionManager extends Thread {
 				e.printStackTrace();
 			}
 		}
+
+		System.out.println("Connection with client " + clientSocket.getInetAddress() + " ended");
+		MomokuServer.INSTANCE.endConnection(this);
 	}
 
 	private void executeCommand(String command) throws IOException, SQLException {
@@ -58,7 +63,7 @@ public class ConnectionManager extends Thread {
         String password = receiver.readUTF();
 
 		User user = UserRepository.REPOSITORY.get(username);
-		if (user == null || user.getPassword() != password) {
+		if (user == null || !user.getPassword().equals(password)) {
 			System.out.println("Invalid credentials");
 			sender.writeBoolean(false);
 		} else {

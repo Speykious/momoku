@@ -37,6 +37,8 @@ public class MomokuClient {
             return;
 
         receiver.close();
+        sender.writeUTF("end");
+        sender.flush();
         sender.close();
         socket.close();
     }

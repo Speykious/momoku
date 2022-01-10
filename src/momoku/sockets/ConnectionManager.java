@@ -6,23 +6,32 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ConnectionManager extends Thread {
-	Socket socket;
-	Server server;
-	DataInputStream din;
-	DataOutputStream dout;
+	private final Socket clientSocket;
+	private final DataInputStream receiver;
+	private final DataOutputStream sender;
 
-	public ConnectionManager(Socket socket, Server server) {
-		super("MultiServerManager");
-		this.socket = socket;
-		this.server = server;
+	public ConnectionManager(Socket socket) throws IOException {
+		super("ConnectionManager");
+		clientSocket = socket;
+		receiver = new DataInputStream(clientSocket.getInputStream());
+		sender = new DataOutputStream(clientSocket.getOutputStream());
 	}
 
-	public void send(String text) throws IOException {
-		dout.writeUTF(text);
-		dout.flush();
-	}
-
+	@Override
 	public void run() {
+		while (clientSocket.isConnected()) {
+			try {
+				String command = receiver.readUTF();
+				executeCommand(command);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
+	private void executeCommand(String command) {
+		switch (command) {
+			default -> System.err.println("Command '" + command + "' does not exist");
+		}
 	}
 }

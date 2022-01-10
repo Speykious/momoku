@@ -28,17 +28,12 @@ public class Server {
 		try {
 			while (true) {
 				Socket socket = serverSocket.accept();
-				ConnectionManager connection = new ConnectionManager(socket, this);
+				ConnectionManager connection = new ConnectionManager(socket);
 				connection.start();
 				connections.add(connection);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void sendAll(String text) throws IOException {
-		for (ConnectionManager manager : connections)
-			manager.send(text);
 	}
 }

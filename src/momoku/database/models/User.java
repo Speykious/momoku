@@ -70,8 +70,8 @@ public class User extends Model<String> {
         return gamesWon;
     }
 
-    public void setGamesWon(int gamesWon) {
-        this.gamesWon = gamesWon;
+    public void winAGame() {
+        gamesWon++;
     }
 
     public int getCurrentScore() {

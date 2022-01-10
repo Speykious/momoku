@@ -36,12 +36,11 @@ public class PracticeModeScreen extends Screen implements ActionListener {
     private JTextField guessTextField;
     private JLabel guessPointsLabel;
 
-    private PracticeModeGameState state;
+    private Image image;
+    private int points;
 
     public PracticeModeScreen() {
         super();
-
-        state = new PracticeModeGameState();
 
         // Main layout
         BorderLayout mainLayout = new BorderLayout();
@@ -108,18 +107,37 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         reset();
     }
 
-    public void nextImage() {
+
+    public void updateImage(Image image) {
+        this.image = image;
+
         guessTextField.setText("");
-        guessPointsLabel.setText(state.getPoints() + " pts");
+        guessPointsLabel.setText(points + " pts");
 
         canvas.setImagePath(Path.of(
             GlobalSettings.IMAGE_DIRECTORY.getAbsolutePath(),
-            state.updateImage().getFilename()).toString());
+            image.getFilename()).toString());
         canvas.repaint();
+    }
+
+    public void updateImage() {
+        try {
+            // TODO: replace by Client Socket method
+            List<Image> images = ImageRepository.REPOSITORY.getRandoms(2);
+            if (image == null || !image.equals(images.get(0)))
+                image = images.get(0);
+            else
+                image = images.get(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            image = null;
+        }
+        updateImage(image);
     }
 
     private boolean verifyImage(String filename, String guess) {
         try {
+            // TODO: replace by Client Socket method
             Image imageData = ImageRepository.REPOSITORY.get(filename);
 
             System.err.println("Showing: " + imageData.getWhoisthis());
@@ -141,14 +159,14 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         }
     }
 
-    private void guess() {
+    protected void guess() {
         guessButton.setEnabled(false);
         guessTextField.setEnabled(false);
 
         String filename = Path.of(canvas.getImagePath()).getFileName().toString();
         if (verifyImage(filename, guessTextField.getText())) {
             guessTextField.setText("correct!");
-            state.addPoint();
+            points++;
         } else {
             guessTextField.setText("nope");
         }
@@ -156,7 +174,7 @@ public class PracticeModeScreen extends Screen implements ActionListener {
         GlobalSettings.TIMER.schedule(new TimerTask() {
             @Override
             public void run() {
-                nextImage();
+                updateImage();
                 guessButton.setEnabled(true);
                 guessTextField.setEnabled(true);
                 guessTextField.requestFocus();
@@ -178,7 +196,7 @@ public class PracticeModeScreen extends Screen implements ActionListener {
 
     @Override
     public void reset() {
-        state.reset();
-        nextImage();
+        points = 0;
+        updateImage();
     }
 }

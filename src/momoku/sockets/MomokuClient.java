@@ -84,6 +84,7 @@ public class MomokuClient {
     public Image getRandomImage(Image previousImage) throws IOException {
         sender.writeUTF("getRandomImage");
         sender.writeUTF(previousImage == null ? "" : previousImage.getFilename());
+        sender.flush();
 
         String filename = receiver.readUTF();
         String whoisthis = receiver.readUTF();
@@ -93,7 +94,7 @@ public class MomokuClient {
     public Room createRoom(String title) throws IOException {
         sender.writeUTF("createRoom");
         sender.writeUTF(title);
-        sender.writeUTF(connectedUser.getUsername());
+        sender.flush();
 
         Room room = new Room(
                 receiver.readInt(),
@@ -110,6 +111,7 @@ public class MomokuClient {
 
     public List<Room> getRooms() throws IOException {
         sender.writeUTF("getRooms");
+        sender.flush();
 
         int length = receiver.readInt();
         Room[] rooms = new Room[length];

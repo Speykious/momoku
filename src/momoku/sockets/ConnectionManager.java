@@ -19,6 +19,7 @@ public class ConnectionManager extends Thread {
 	private final Socket clientSocket;
 	private final DataInputStream receiver;
 	private final DataOutputStream sender;
+	private User connectedUser;
 
 	public ConnectionManager(Socket socket) throws IOException {
 		super("ConnectionManager");
@@ -55,6 +56,7 @@ public class ConnectionManager extends Thread {
 			case "getRandomImage" -> getRandomImage();
 			case "createRoom" -> createRoom();
 			case "getRooms" -> getRooms();
+			case "leaveRoom" -> leaveRoom();
 			default -> System.err.println("Command '" + command + "' does not exist");
 		}
 	}
@@ -75,10 +77,12 @@ public class ConnectionManager extends Thread {
 			sender.writeBoolean(false);
 		} else {
 			System.out.println("User " + username + " connected successfully");
+			connectedUser = user;
 			sender.writeBoolean(true);
 			sendUserInfo(user);
 		}
 
+		
 		sender.flush();
 	}
 
@@ -94,6 +98,7 @@ public class ConnectionManager extends Thread {
 			System.out.println("Registered new user " + username);
 			User user = new User(username, password);
 			UserRepository.REPOSITORY.save(user);
+			connectedUser = user;
 			sendUserInfo(user);
 		}
 
@@ -118,9 +123,8 @@ public class ConnectionManager extends Thread {
 
 	private void createRoom() throws IOException, SQLException {
 		String title = receiver.readUTF();
-		String ownerName = receiver.readUTF();
 		
-		User owner = UserRepository.REPOSITORY.get(ownerName);
+		User owner = connectedUser;
 		int roomCount = RoomRepository.REPOSITORY.count();
 		Room room = new Room(roomCount + 1, title, owner);
 		RoomRepository.REPOSITORY.save(room);

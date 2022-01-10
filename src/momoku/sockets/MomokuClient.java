@@ -80,7 +80,7 @@ public class MomokuClient {
 
 	public Image getRandomImage(Image previousImage) throws IOException {
         sender.writeUTF("getRandomImage");
-        sender.writeUTF(previousImage.getFilename());
+        sender.writeUTF(previousImage == null ? "" : previousImage.getFilename());
 
 		String filename = receiver.readUTF();
         String whoisthis = receiver.readUTF();

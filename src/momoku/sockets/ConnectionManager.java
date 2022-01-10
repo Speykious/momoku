@@ -100,11 +100,12 @@ public class ConnectionManager extends Thread {
 		String filename = receiver.readUTF();
 		Image image;
 		List<Image> images = ImageRepository.REPOSITORY.getRandoms(2);
-		if (!filename.equals(images.get(0).getFilename()))
+		if (filename.equals("") || !filename.equals(images.get(0).getFilename()))
 			image = images.get(0);
 		else
 			image = images.get(1);
 		
+		System.out.println("Sending " + image.getFilename());
 		sender.writeUTF(image.getFilename());
 		sender.writeUTF(image.getWhoisthis());
 

@@ -87,7 +87,7 @@ public abstract class Repository<M extends Model<K>, K> {
         return model;
     }
 
-    private synchronized List<M> getModels(PreparedStatement statement) throws SQLException {
+    protected synchronized List<M> getModels(PreparedStatement statement) throws SQLException {
         List<M> models = new ArrayList<M>();
         ResultSet result = statement.executeQuery();
         while (result.next())
@@ -127,6 +127,10 @@ public abstract class Repository<M extends Model<K>, K> {
         cache(model);
         populateColumns(saveStatement, 1, model);
         return saveStatement.execute();
+    }
+
+    public synchronized boolean delete(M model) throws SQLException {
+        return delete(model.getPrimaryKey());
     }
 
     public synchronized boolean delete(K key) throws SQLException {

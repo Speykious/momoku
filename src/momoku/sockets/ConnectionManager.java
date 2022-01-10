@@ -54,6 +54,7 @@ public class ConnectionManager extends Thread {
 			case "register" -> register();
 			case "getRandomImage" -> getRandomImage();
 			case "createRoom" -> createRoom();
+			case "getRooms" -> getRooms();
 			default -> System.err.println("Command '" + command + "' does not exist");
 		}
 	}
@@ -123,11 +124,34 @@ public class ConnectionManager extends Thread {
 		int roomCount = RoomRepository.REPOSITORY.count();
 		Room room = new Room(roomCount + 1, title, owner);
 		RoomRepository.REPOSITORY.save(room);
+		owner.setCurrentRoom(room);
+		UserRepository.REPOSITORY.update(owner);
 
 		sender.writeInt(room.getId());
 		sender.writeInt(room.getRounds());
 		sender.writeLong(room.getCreationDate().getTime());
 
 		sender.flush();
+	}
+
+	private void getRooms() throws IOException, SQLException {
+		List<Room> rooms = RoomRepository.REPOSITORY.list();
+
+		sender.writeInt(rooms.size());
+		for (Room room : rooms) {
+			sender.writeInt(room.getId());
+			sender.writeUTF(room.getTitle());
+
+			User owner = room.getOwner();
+			sender.writeUTF(owner.getUsername());
+			sender.writeBoolean(owner.isPlaying());
+			sender.writeBoolean(owner.isReady());
+			sender.writeInt(owner.getGamesWon());
+			sender.writeInt(owner.getCurrentScore());
+			sender.writeLong(owner.getCreationDate().getTime());
+
+			sender.writeInt(room.getRounds());
+			sender.writeLong(room.getCreationDate().getTime());
+		}
 	}
 }

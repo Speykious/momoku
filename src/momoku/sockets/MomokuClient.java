@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Date;
+import java.util.Arrays;
+import java.util.List;
 
 import momoku.database.models.Image;
 import momoku.database.models.Room;
@@ -93,7 +95,7 @@ public class MomokuClient {
         sender.writeUTF(title);
         sender.writeUTF(connectedUser.getUsername());
 
-        return new Room(
+        Room room = new Room(
                 receiver.readInt(),
                 title,
                 null,
@@ -101,5 +103,43 @@ public class MomokuClient {
                 false,
                 receiver.readInt(),
                 new Date(receiver.readLong()));
+
+        connectedUser.setCurrentRoom(room);
+        return room;
+    }
+
+    public List<Room> getRooms() throws IOException {
+        sender.writeUTF("getRooms");
+
+        int length = receiver.readInt();
+        Room[] rooms = new Room[length];
+        for (int i = 0; i < length; i++) {
+            int id = receiver.readInt();
+            String title = receiver.readUTF();
+
+            String ownerName = receiver.readUTF();
+            boolean playing = receiver.readBoolean();
+            boolean ready = receiver.readBoolean();
+            int gamesWon = receiver.readInt();
+            int currentScore = receiver.readInt();
+            Date ownerDate = new Date(receiver.readLong());
+            User owner = new User(ownerName, null, null, playing, ready, gamesWon, currentScore, ownerDate);
+
+            int rounds = receiver.readInt();
+            Date roomDate = new Date(receiver.readLong());
+
+            rooms[i] = new Room(
+                id,
+                title,
+                null,
+                owner,
+                playing,
+                rounds,
+                roomDate);
+
+            owner.setCurrentRoom(rooms[i]);
+        }
+
+        return Arrays.asList(rooms);
     }
 }

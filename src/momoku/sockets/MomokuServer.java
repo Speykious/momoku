@@ -41,7 +41,8 @@ public class MomokuServer {
 		}
 	}
 
-	public boolean endConnection(ConnectionManager connection) {
-		return connections.remove(connection);
+	public void endConnection(ConnectionManager connection) {
+		connections.remove(connection);
+		System.out.println("Connections remaining: " + connections.size());
 	}
 }

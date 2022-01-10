@@ -25,6 +25,7 @@ public abstract class Repository<M extends Model<K>, K> {
     private volatile PreparedStatement saveStatement;
     private volatile PreparedStatement deleteStatement;
     private volatile PreparedStatement listStatement;
+    private volatile PreparedStatement countStatement;
     private volatile PreparedStatement getRandomStatement;
 
     protected Repository(String tableName, String primaryKeyName, List<String> columns) {
@@ -53,6 +54,7 @@ public abstract class Repository<M extends Model<K>, K> {
                     "INSERT INTO " + tableName + " (" + columnsInto + ") VALUES (" + columnsValues + ")");
             deleteStatement = c.prepareStatement("DELETE FROM " + tableName + " WHERE id = ?");
             listStatement = c.prepareStatement("SELECT * FROM " + tableName);
+            countStatement = c.prepareStatement("SELECT COUNT(*) AS count FROM " + tableName);
             getRandomStatement = c.prepareStatement("SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT ?");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -134,6 +136,12 @@ public abstract class Repository<M extends Model<K>, K> {
 
     public synchronized List<M> list() throws SQLException {
         return getModels(listStatement);
+    }
+
+    public synchronized int count() throws SQLException {
+        ResultSet result = countStatement.executeQuery();
+        result.next();
+        return result.getInt("count");
     }
 
     public synchronized M getRandom() throws SQLException {

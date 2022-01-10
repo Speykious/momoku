@@ -28,7 +28,7 @@ public class ConnectionManager extends Thread {
 			try {
 				String command = receiver.readUTF();
 				System.out.println("Command received: " + command);
-				if (command == "end")
+				if (command.equals("end"))
 					break;
 				executeCommand(command);
 			} catch (EOFException e) {

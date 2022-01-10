@@ -175,4 +175,11 @@ public class LoginScreen extends Screen implements ActionListener {
             case "register" -> register();
         }
     }
+
+    @Override
+    public void reset() {
+        messageLabel.setText(" ");
+        usernameField.setText("");
+        passwordField.setText("");
+    }
 }

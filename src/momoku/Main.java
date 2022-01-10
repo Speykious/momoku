@@ -7,6 +7,7 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
+import momoku.database.models.User;
 import momoku.sockets.MomokuClient;
 
 public class Main {

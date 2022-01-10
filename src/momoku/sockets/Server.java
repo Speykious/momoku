@@ -1,34 +1,44 @@
 package momoku.sockets;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
+	public static final Server INSTANCE = new Server();
+	private ServerSocket serverSocket;
+	List<ConnectionManager> connections = new ArrayList<ConnectionManager>();
 
-	ServerSocket ss;
-	ArrayList<MultiServerManager> ListeConnexions =new ArrayList<MultiServerManager>();
-	
 	public static void main(String[] args) {
-		new Server();
-
+		INSTANCE.listen();
 	}
-	public Server() {
+
+	private Server() {
 		try {
-			ss = new ServerSocket(3000); //Connexion au port 3000
-			while(true)
-			{
-				Socket socket = ss.accept(); //Connexions au port acceptées
-				MultiServerManager connexion = new MultiServerManager(socket, this);
-				connexion.start(); //Thread
-				ListeConnexions.add(connexion);
+			serverSocket = new ServerSocket(3000);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+	public void listen() {
+		try {
+			while (true) {
+				Socket socket = serverSocket.accept();
+				ConnectionManager connection = new ConnectionManager(socket, this);
+				connection.start();
+				connections.add(connection);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}//make sure its bloody same with client it took my 15 min to realize that XD
+		}
+	}
+
+	public void sendAll(String text) throws IOException {
+		for (ConnectionManager manager : connections)
+			manager.send(text);
 	}
 }

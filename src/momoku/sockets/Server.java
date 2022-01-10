@@ -29,6 +29,6 @@ public class Server {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}//make sure its bloody same with client it took my 15 min to realize that XD
+		}
 	}
 }

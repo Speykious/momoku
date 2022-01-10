@@ -7,6 +7,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -78,6 +81,18 @@ public class LoginPage extends Screen implements ActionListener {
         label = new JLabel("");
         label.setBounds(0, 0, 1008, 562);
         contentPane.add(label);
+
+        /*try {
+			Socket s = new Socket("localhost",3000);
+			MultiClients t = new MultiClients(s,this);
+			t.start();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};*/
     }
 
     @Override

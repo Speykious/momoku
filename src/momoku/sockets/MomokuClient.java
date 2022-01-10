@@ -37,11 +37,7 @@ public class MomokuClient {
         return new User(
             username,
             password,
-            null,
-            false,
-            false,
             receiver.readInt(),
-            0,
             new Date(receiver.readLong()));
     }
     
